@@ -1,15 +1,11 @@
 import React from 'react';
 import {
   CheckCircle2,
-  XCircle,
   HelpCircle,
-  Sparkles,
-  ArrowRight,
   TrendingDown,
   Clock,
-  IndianRupee,
-  Leaf,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 import { RouteOption, AIRecommendation } from '../types';
 
@@ -31,32 +27,32 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
   onOpenReasoning,
 }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       
-      {/* Route Comparison Table Card */}
-      <div className="glass-panel p-6 rounded-2xl border border-white/10 shadow-card space-y-4">
+      {/* Route Evaluation Table */}
+      <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-panel space-y-3">
         
-        <div className="flex items-center justify-between">
-          <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-            <span>ROUTE EVALUATION MATRIX</span>
+        <div className="flex items-center justify-between pb-2">
+          <h3 className="text-base font-bold text-white tracking-tight">
+            ROUTE EVALUATION MATRIX
           </h3>
-          <span className="text-xs font-mono text-slate-400">120 Container Batch Evaluation</span>
+          <span className="text-xs font-mono text-slate-400">120 TEU Batch Evaluation</span>
         </div>
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm font-sans border-collapse">
+          <table className="w-full text-left text-xs font-sans border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-xs font-mono text-slate-400 uppercase tracking-wider">
-                <th className="py-3 px-4">Route Pathway</th>
-                <th className="py-3 px-4 text-right">ETA</th>
-                <th className="py-3 px-4 text-right">Cost / TEU</th>
-                <th className="py-3 px-4 text-right">CO₂ Emission</th>
-                <th className="py-3 px-4 text-center">Risk Level</th>
-                <th className="py-3 px-4 text-right">AI Score</th>
+              <tr className="border-b border-slate-800 text-[11px] font-mono text-slate-400 uppercase">
+                <th className="py-2.5 px-3">Route Pathway</th>
+                <th className="py-2.5 px-3 text-right">ETA</th>
+                <th className="py-2.5 px-3 text-right">Cost / TEU</th>
+                <th className="py-2.5 px-3 text-right">CO₂ Emission</th>
+                <th className="py-2.5 px-3 text-center">Risk Level</th>
+                <th className="py-2.5 px-3 text-right">AI Score</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-mono">
+            <tbody className="divide-y divide-slate-800/60 font-mono">
               {routes.map((route) => {
                 const isSelected = selectedRouteId === route.id;
                 const isRecommended = route.isRecommended;
@@ -65,58 +61,58 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                   <tr
                     key={route.id}
                     onClick={() => onSelectRoute(route.id)}
-                    className={`cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-colors ${
                       isRecommended
-                        ? 'bg-emerald-950/30 hover:bg-emerald-950/50'
+                        ? 'bg-emerald-950/40 hover:bg-emerald-950/60'
                         : isSelected
                         ? 'bg-slate-800/60'
-                        : 'hover:bg-slate-900/50'
+                        : 'hover:bg-slate-900/60'
                     }`}
                   >
                     {/* Route Name */}
-                    <td className="py-4 px-4">
+                    <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: route.color }}></span>
+                        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: route.color }}></span>
                         <div>
-                          <span className="font-extrabold text-white font-sans text-sm block">
+                          <span className="font-bold text-white font-sans text-xs block">
                             {route.name}
                           </span>
-                          <span className="text-xs text-slate-400 font-mono">
+                          <span className="text-[10px] text-slate-400 font-mono">
                             {route.mode}
                           </span>
                         </div>
                         {isRecommended && (
-                          <span className="ml-2 px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/40">
-                            ★ RECOMMENDED
+                          <span className="ml-2 px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 text-[10px] font-bold border border-emerald-800 uppercase">
+                            RECOMMENDED
                           </span>
                         )}
                       </div>
                     </td>
 
                     {/* ETA */}
-                    <td className="py-4 px-4 text-right font-bold text-white">
+                    <td className="py-3 px-3 text-right font-bold text-white">
                       {route.etaHours}h
                     </td>
 
                     {/* Cost */}
-                    <td className="py-4 px-4 text-right font-bold text-white">
+                    <td className="py-3 px-3 text-right font-bold text-white">
                       ₹{route.costPerContainer.toLocaleString()}
                     </td>
 
                     {/* CO2 */}
-                    <td className="py-4 px-4 text-right text-slate-300">
+                    <td className="py-3 px-3 text-right text-slate-300">
                       {route.co2PerContainerTons}t
                     </td>
 
                     {/* Risk Level */}
-                    <td className="py-4 px-4 text-center">
+                    <td className="py-3 px-3 text-center">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded text-xs font-bold ${
+                        className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
                           route.riskLevel === 'High'
-                            ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                            ? 'bg-rose-950 text-rose-300 border border-rose-800'
                             : route.riskLevel === 'Low'
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                            : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                            : 'bg-amber-950 text-amber-300 border border-amber-800'
                         }`}
                       >
                         {route.riskLevel}
@@ -124,15 +120,8 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
                     </td>
 
                     {/* AI Score */}
-                    <td className="py-4 px-4 text-right">
-                      <span
-                        className={`text-base font-extrabold ${
-                          isRecommended ? 'text-emerald-400 text-lg' : 'text-slate-300'
-                        }`}
-                      >
-                        {route.aiScore}
-                      </span>
-                      <span className="text-xs text-slate-500"> /100</span>
+                    <td className="py-3 px-3 text-right font-bold text-sm text-white">
+                      {route.aiScore} <span className="text-[10px] text-slate-500 font-normal">/100</span>
                     </td>
                   </tr>
                 );
@@ -143,70 +132,69 @@ export const RouteComparison: React.FC<RouteComparisonProps> = ({
 
       </div>
 
-      {/* Prominent AI Recommendation Highlight Card */}
-      <div className="glass-card-accent p-6 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 shadow-glow-emerald space-y-4">
+      {/* Prominent AI Recommendation Card */}
+      <div className="bg-slate-900/95 p-5 rounded-xl border border-emerald-800/80 space-y-4 shadow-panel">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-emerald-400 shadow-glow-emerald">
-              <Sparkles className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-lg bg-emerald-950 border border-emerald-800 flex items-center justify-center text-emerald-400">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-mono text-emerald-400 uppercase tracking-widest font-bold">
-                AI DECISION ENGINE RECOMMENDATION
+              <div className="text-[10px] font-mono text-emerald-400 uppercase font-bold">
+                RECOMMENDED STRATEGY
               </div>
-              <h3 className="text-xl font-extrabold text-white">
+              <h3 className="text-lg font-bold text-white">
                 Switch to WDFC Rail Route
               </h3>
             </div>
           </div>
 
-          {/* AI Score Badge */}
-          <div className="flex items-center gap-2 bg-emerald-950/80 px-4 py-2 rounded-xl border border-emerald-500/50">
-            <span className="text-3xl font-extrabold text-emerald-400 font-mono">
+          <div className="flex items-center gap-2 bg-slate-950 px-3.5 py-1.5 rounded-lg border border-slate-800">
+            <span className="text-2xl font-bold text-emerald-400 font-mono">
               91
             </span>
             <div className="text-left font-mono">
-              <span className="text-xs text-emerald-300 font-bold block">/ 100</span>
-              <span className="text-[10px] text-slate-400 uppercase">AI SCORE</span>
+              <span className="text-xs text-slate-400 block">/ 100</span>
+              <span className="text-[9px] text-slate-500 uppercase">AI SCORE</span>
             </div>
           </div>
 
         </div>
 
         {/* Reasoning Quote Box */}
-        <blockquote className="bg-slate-950/80 p-4 rounded-xl border-l-4 border-emerald-400 text-slate-200 text-sm font-sans italic leading-relaxed">
+        <blockquote className="bg-slate-950 p-3.5 rounded-lg border-l-2 border-emerald-400 text-slate-200 text-xs font-sans leading-relaxed">
           "{recommendation.reasoning}"
         </blockquote>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
           
           <div className="flex items-center gap-4 text-xs font-mono text-slate-300">
             <span className="flex items-center gap-1 text-emerald-400 font-bold">
-              <TrendingDown className="w-4 h-4" /> ₹5.4 Lakhs Savings
+              <TrendingDown className="w-3.5 h-3.5" /> ₹5.4 Lakhs Savings
             </span>
-            <span className="flex items-center gap-1 text-cyan-400 font-bold">
-              <Clock className="w-4 h-4" /> -7.2 Hrs Delay
+            <span className="flex items-center gap-1 text-blue-400 font-bold">
+              <Clock className="w-3.5 h-3.5" /> -7.2 Hrs Delay
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             
             <button
               onClick={onOpenReasoning}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-bold transition-colors"
             >
-              <HelpCircle className="w-4 h-4" />
+              <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
               <span>View Reasoning</span>
             </button>
 
             <button
               onClick={onApprove}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-black text-xs font-extrabold transition-all shadow-glow-emerald hover:scale-[1.02]"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 border border-emerald-600 text-white text-xs font-bold transition-all shadow-subtle active:scale-[0.99]"
             >
-              <CheckCircle2 className="w-4 h-4 fill-black" />
+              <CheckCircle2 className="w-4 h-4 text-white" />
               <span>Approve Reroute</span>
             </button>
 

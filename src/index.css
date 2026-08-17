@@ -4,85 +4,68 @@
 
 @layer base {
   body {
-    background-color: #080B11;
-    color: #F1F5F9;
+    background-color: #0A0D14;
+    color: #F9FAFB;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Glassmorphism utility classes */
+/* Professional Enterprise Glass & Card Panels */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel-hover {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease-in-out;
 }
 
 .glass-panel-hover:hover {
-  background: rgba(30, 41, 59, 0.85);
-  border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 10px 30px -10px rgba(0, 242, 254, 0.15);
+  background: rgba(31, 41, 55, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .glass-card-accent {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: linear-gradient(180deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #080B11;
+  background: #0A0D14;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 3px;
+  background: #1F2937;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-/* Pulse Glow Keyframes */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.05);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s infinite ease-in-out;
+  background: #374151;
 }
 
 /* Leaflet dark custom tiles override */
 .leaflet-container {
-  background-color: #080B11 !important;
+  background-color: #0A0D14 !important;
   font-family: inherit;
   border-radius: 0.75rem;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #0F172A !important;
-  color: #F8FAFC !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7) !important;
+  background: #111827 !important;
+  color: #F9FAFB !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0F172A !important;
+  background: #111827 !important;
 }

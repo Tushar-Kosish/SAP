@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
-  Zap,
   Layers,
   Activity,
   Cpu,
@@ -11,7 +10,8 @@ import {
   Clock,
   ArrowRight,
   UserCheck,
-  GitBranch
+  GitBranch,
+  ShieldCheck
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -22,66 +22,63 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMore }) => {
   const navigate = useNavigate();
 
   const navItems = [
-    { path: '/', label: 'Home', icon: <Layers className="w-4 h-4" /> },
-    { path: '/operations', label: 'Operations', icon: <Activity className="w-4 h-4" /> },
-    { path: '/agents', label: 'AI Agents', icon: <Cpu className="w-4 h-4" /> },
-    { path: '/routes', label: 'Routes', icon: <MapPin className="w-4 h-4" /> },
-    { path: '/sap', label: 'SAP', icon: <Server className="w-4 h-4" /> },
-    { path: '/documents', label: 'Documents', icon: <FileText className="w-4 h-4" /> },
-    { path: '/audit', label: 'Audit', icon: <Clock className="w-4 h-4" /> },
-    { path: '/architecture', label: 'Architecture', icon: <GitBranch className="w-4 h-4" /> },
+    { path: '/', label: 'Home', icon: <Layers className="w-4 h-4 text-slate-400" /> },
+    { path: '/operations', label: 'Operations', icon: <Activity className="w-4 h-4 text-slate-400" /> },
+    { path: '/agents', label: 'AI Agents', icon: <Cpu className="w-4 h-4 text-slate-400" /> },
+    { path: '/routes', label: 'Routes', icon: <MapPin className="w-4 h-4 text-slate-400" /> },
+    { path: '/sap', label: 'SAP', icon: <Server className="w-4 h-4 text-slate-400" /> },
+    { path: '/documents', label: 'Documents', icon: <FileText className="w-4 h-4 text-slate-400" /> },
+    { path: '/audit', label: 'Audit Log', icon: <Clock className="w-4 h-4 text-slate-400" /> },
+    { path: '/architecture', label: 'Architecture', icon: <GitBranch className="w-4 h-4 text-slate-400" /> },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#080B11]/90 backdrop-blur-md border-b border-white/10 px-4 lg:px-8 py-3">
+    <header className="sticky top-0 z-40 bg-[#0A0D14]/95 backdrop-blur-md border-b border-slate-800/80 px-4 lg:px-8 py-3">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
         {/* Left Branding */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-glow-cyan transition-transform group-hover:scale-105">
-            <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-black font-bold fill-black" />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200 group-hover:border-slate-500 transition-colors">
+            <ShieldCheck className="w-4 h-4 text-blue-400" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white font-sans">
-                SmartEvac <span className="text-cyan-400">AI</span>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold tracking-tight text-white font-sans">
+                SmartEvac <span className="text-slate-400 font-normal">AI</span>
               </span>
-              <span className="hidden md:inline-block text-[10px] uppercase tracking-wider font-mono font-semibold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
-                SAP BTP
+              <span className="hidden md:inline-block text-[10px] uppercase tracking-wider font-mono font-semibold px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                SAP BTP Core
               </span>
             </div>
           </div>
         </Link>
 
         {/* Mobile Header Center & Right */}
-        <div className="flex lg:hidden items-center gap-2.5">
-          {/* Live Status Badge */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>● LIVE</span>
+        <div className="flex lg:hidden items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 text-[10px] font-mono font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>OPERATIONAL</span>
           </div>
 
-          {/* Profile / Menu Icon Button */}
           <button
             onClick={onOpenMore}
-            className="w-8 h-8 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-cyan-400 active:scale-95"
+            className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 active:bg-slate-800"
           >
             <UserCheck className="w-4 h-4" />
           </button>
         </div>
 
         {/* Center Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-xl border border-white/10">
+        <nav className="hidden lg:flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                `flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'bg-gradient-to-r from-cyan-500/20 to-blue-600/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-slate-800 text-white font-semibold border border-slate-700/80 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                 }`
               }
             >
@@ -95,10 +92,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMore }) => {
         <div className="hidden lg:flex items-center gap-3">
           <button
             onClick={() => navigate('/operations')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-black text-xs font-extrabold transition-all shadow-glow-cyan hover:scale-[1.02]"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-bold transition-all shadow-subtle active:scale-[0.99]"
           >
             <span>Launch Command Center</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
           </button>
         </div>
 

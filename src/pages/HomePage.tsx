@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Zap,
   ArrowRight,
   Play,
   Cpu,
@@ -11,126 +10,114 @@ import {
   Server,
   AlertOctagon,
   CheckCircle2,
-  Sparkles
+  ShieldCheck,
+  Navigation,
+  FileCheck
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-12 sm:space-y-16 py-4 sm:py-8 pb-24 lg:pb-8">
+    <div className="space-y-16 py-6 pb-24 lg:pb-12">
       
       {/* 1. Hero Section */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         
-        <div className="text-center max-w-4xl mx-auto space-y-4 sm:space-y-6">
+        <div className="text-center max-w-4xl mx-auto space-y-6">
           
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/90 border border-cyan-500/40 text-cyan-300 text-xs font-mono tracking-wide shadow-glow-cyan"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>SAP BTP MULTI-AGENT LOGISTICS PLATFORM</span>
-          </motion.div>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono">
+            <ShieldCheck className="w-4 h-4 text-blue-400" />
+            <span>ENTERPRISE LOGISTICS INTELLIGENCE PLATFORM</span>
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight font-sans"
-          >
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight font-sans">
             SMART LOGISTICS.<br />
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              AUTONOMOUS DECISIONS.
-            </span>
-          </motion.h1>
+            <span className="text-slate-400 font-bold">AUTONOMOUS DECISIONS.</span>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-sm sm:text-lg text-slate-300 font-normal max-w-2xl mx-auto leading-relaxed"
-          >
-            AI-powered logistics disruption detection and intelligent route optimization.
-          </motion.p>
+          <p className="text-sm sm:text-base text-slate-300 font-normal max-w-2xl mx-auto leading-relaxed">
+            Multi-agent AI platform that monitors landside port congestion, evaluates multi-modal transportation corridors, and executes optimal rerouting decisions directly via SAP Transportation Management.
+          </p>
 
-          {/* Full-width touch CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 max-w-md mx-auto sm:max-w-none"
-          >
+          {/* Clean Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 max-w-md mx-auto sm:max-w-none">
             <button
               onClick={() => navigate('/operations')}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-black font-extrabold text-sm sm:text-base transition-all shadow-glow-cyan active:scale-95 min-h-[48px]"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-sm transition-all shadow-subtle active:scale-[0.99]"
             >
-              <span>🚀 Launch Command Center</span>
+              <span>Launch Command Center</span>
+              <ArrowRight className="w-4 h-4 text-slate-400" />
             </button>
 
             <button
               onClick={() => navigate('/agents')}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-cyan-500/40 text-cyan-300 font-bold text-sm sm:text-base transition-all active:scale-95 min-h-[48px]"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 font-semibold text-sm transition-all active:scale-[0.99]"
             >
               <span>Explore AI Agents</span>
-              <ArrowRight className="w-4 h-4" />
             </button>
-          </motion.div>
+          </div>
 
         </div>
 
       </section>
 
-      {/* 2. Compact Mobile Hero Visual */}
+      {/* 2. Enterprise GIS Corridor Telemetry Monitor */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         
-        <div className="glass-panel rounded-3xl p-5 sm:p-8 border border-cyan-500/30 bg-gradient-to-b from-slate-950 via-slate-900 to-black shadow-card">
+        <div className="bg-slate-900/90 rounded-xl p-5 sm:p-8 border border-slate-800 space-y-6 shadow-panel">
           
-          <div className="flex items-center justify-between pb-4 border-b border-white/10 text-[10px] sm:text-xs font-mono">
-            <div className="flex items-center gap-2 text-cyan-400 font-bold">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              <span>JNPA PORT → AI → DELHI NCR</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800 text-xs font-mono">
+            <div className="flex items-center gap-2 text-slate-200 font-bold">
+              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+              <span>CORRIDOR MONITOR: JNPA PORT → ICD DADRI (DELHI NCR)</span>
             </div>
-            <span className="text-slate-400">WDFC RAIL LINK</span>
+            <span className="text-slate-400">WDFC DEDICATED FREIGHT RAILWAY</span>
           </div>
 
-          <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             
             {/* JNPA */}
-            <div className="bg-slate-900 p-3.5 rounded-xl border border-cyan-500/40 text-center w-full sm:w-44">
-              <div className="text-xl mb-1">🚢</div>
-              <div className="text-xs font-extrabold text-white">JNPA PORT</div>
-              <div className="text-[10px] font-mono text-cyan-400">Navi Mumbai</div>
+            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-center w-full sm:w-52 space-y-1">
+              <div className="text-xs font-mono text-slate-400 uppercase">ORIGIN NODE</div>
+              <div className="text-sm font-bold text-white">JNPA PORT TERMINAL</div>
+              <div className="text-[11px] font-mono text-blue-400">1,248 TEU In Transit</div>
             </div>
 
             {/* AI Signal Pipeline */}
             <div className="w-full flex-1 flex flex-col items-center justify-center gap-2">
-              <div className="w-full bg-slate-950 p-2.5 rounded-xl border border-emerald-400 flex items-center justify-between text-[11px] font-mono shadow-glow-emerald">
-                <span className="text-emerald-400 font-bold">🚆 WDFC Rail</span>
-                <span className="text-emerald-300 font-extrabold">31h ETA (Optimal)</span>
+              <div className="w-full bg-slate-950 p-3 rounded-lg border border-emerald-800/60 flex items-center justify-between text-xs font-mono">
+                <span className="text-emerald-400 font-bold">Route B: WDFC Electric Rail</span>
+                <span className="text-emerald-300 font-bold">31h ETA (AI Recommended)</span>
               </div>
             </div>
 
             {/* Delhi NCR */}
-            <div className="bg-slate-900 p-3.5 rounded-xl border border-blue-500/40 text-center w-full sm:w-44">
-              <div className="text-xl mb-1">🏭</div>
-              <div className="text-xs font-extrabold text-white">ICD DADRI</div>
-              <div className="text-[10px] font-mono text-blue-400">Delhi NCR</div>
+            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 text-center w-full sm:w-52 space-y-1">
+              <div className="text-xs font-mono text-slate-400 uppercase">DESTINATION NODE</div>
+              <div className="text-sm font-bold text-white">ICD DADRI TERMINAL</div>
+              <div className="text-[11px] font-mono text-slate-400">Delhi NCR Freight Hub</div>
             </div>
 
           </div>
 
-          {/* Small Floating Indicators */}
-          <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-mono pt-3 border-t border-white/10">
-            <div className="bg-slate-950 p-2 rounded-lg border border-rose-500/40 text-rose-400 font-bold">
-              82% CONGESTION
+          {/* Benchmark Metrics Bar */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center text-xs font-mono pt-4 border-t border-slate-800">
+            <div className="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span className="text-slate-400 block text-[10px]">NH48 CONGESTION</span>
+              <span className="text-rose-400 font-bold">82 / 100</span>
             </div>
-            <div className="bg-slate-950 p-2 rounded-lg border border-cyan-500/40 text-cyan-400 font-bold">
-              94% AI CONFIDENCE
+            <div className="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span className="text-slate-400 block text-[10px]">EXPECTED DELAY</span>
+              <span className="text-amber-400 font-bold">+8.2 Hours</span>
             </div>
-            <div className="bg-slate-950 p-2 rounded-lg border border-emerald-500/40 text-emerald-400 font-bold">
-              3 ROUTES
+            <div className="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span className="text-slate-400 block text-[10px]">DECISION CONFIDENCE</span>
+              <span className="text-cyan-400 font-bold">94%</span>
+            </div>
+            <div className="bg-slate-950 p-2.5 rounded border border-slate-800">
+              <span className="text-slate-400 block text-[10px]">SAVINGS / TEU</span>
+              <span className="text-emerald-400 font-bold">₹4,500</span>
             </div>
           </div>
 
@@ -138,43 +125,41 @@ export const HomePage: React.FC = () => {
 
       </section>
 
-      {/* 3. Mobile Swipeable Feature Cards Carousel */}
-      <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-4">
+      {/* 3. System Capabilities Grid */}
+      <section className="max-w-7xl mx-auto px-4 lg:px-8 space-y-6">
         
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-white">SYSTEM CAPABILITIES</h2>
-            <p className="text-xs text-slate-400">Swipe to explore core platform modules</p>
+            <h2 className="text-xl font-bold text-white">SYSTEM MODULES</h2>
+            <p className="text-xs text-slate-400">Core capabilities of the SmartEvac enterprise engine</p>
           </div>
-          <span className="text-[10px] font-mono text-cyan-400 md:hidden">Swipe Left →</span>
         </div>
 
-        {/* Carousel Container */}
-        <div className="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-none">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           
           {/* Card 1 */}
           <div
             onClick={() => navigate('/agents')}
-            className="flex-none w-[85%] sm:w-80 md:w-auto snap-center cursor-pointer glass-panel p-6 rounded-2xl border border-white/10 hover:border-cyan-500/50 space-y-4 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/30 active:scale-[0.98]"
+            className="cursor-pointer bg-slate-900/90 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors space-y-3"
           >
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-xl bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-                <Cpu className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-blue-400">
+                <Cpu className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-mono text-cyan-400 font-bold px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800">
-                5 AI AGENTS
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                5 MICRO-AGENTS
               </span>
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-lg font-extrabold text-white">AI Agents</h3>
+              <h3 className="text-base font-bold text-white">AI Agent Network</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                5 specialized AI agents working together autonomously to monitor, analyze, decide, and file documents.
+                5 specialized micro-agents (Sensing, Rerouting, Impact, Decision, Documentation) executing asynchronous solver routines.
               </p>
             </div>
 
-            <div className="flex items-center text-xs font-bold text-cyan-400 gap-1.5 pt-1">
-              <span>Explore Agents</span>
+            <div className="flex items-center text-xs font-semibold text-blue-400 gap-1 pt-1">
+              <span>View Agent Network</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -182,26 +167,26 @@ export const HomePage: React.FC = () => {
           {/* Card 2 */}
           <div
             onClick={() => navigate('/operations')}
-            className="flex-none w-[85%] sm:w-80 md:w-auto snap-center cursor-pointer glass-panel p-6 rounded-2xl border border-white/10 hover:border-blue-500/50 space-y-4 bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950/30 active:scale-[0.98]"
+            className="cursor-pointer bg-slate-900/90 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors space-y-3"
           >
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-xl bg-blue-950 border border-blue-500/40 flex items-center justify-center text-blue-400">
-                <Activity className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-400">
+                <Activity className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-mono text-blue-400 font-bold px-2 py-0.5 rounded bg-blue-950 border border-blue-800">
-                TELEMETRY
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                LIVE TELEMETRY
               </span>
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-lg font-extrabold text-white">Live Operations</h3>
+              <h3 className="text-base font-bold text-white">Live Operations</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Monitor shipments and disruptions in real time from a high-density command center interface.
+                High-density operations center monitoring active container shipments, gate queues, and highway toll bottlenecks in real time.
               </p>
             </div>
 
-            <div className="flex items-center text-xs font-bold text-blue-400 gap-1.5 pt-1">
-              <span>Open Operations</span>
+            <div className="flex items-center text-xs font-semibold text-emerald-400 gap-1 pt-1">
+              <span>Open Command Center</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -209,26 +194,26 @@ export const HomePage: React.FC = () => {
           {/* Card 3 */}
           <div
             onClick={() => navigate('/routes')}
-            className="flex-none w-[85%] sm:w-80 md:w-auto snap-center cursor-pointer glass-panel p-6 rounded-2xl border border-white/10 hover:border-emerald-500/50 space-y-4 bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950/30 active:scale-[0.98]"
+            className="cursor-pointer bg-slate-900/90 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors space-y-3"
           >
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                <MapPin className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-cyan-400">
+                <MapPin className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800">
-                PATHWAYS
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                MULTI-MODAL SOLVER
               </span>
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-lg font-extrabold text-white">Route Intelligence</h3>
+              <h3 className="text-base font-bold text-white">Route Intelligence</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Compare road, rail and coastal alternatives for cost, ETA, and CO₂ footprint optimization.
+                Evaluates highway (NH48), dedicated electrified rail (WDFC), and coastal feeder links across cost, ETA, and carbon footprint.
               </p>
             </div>
 
-            <div className="flex items-center text-xs font-bold text-emerald-400 gap-1.5 pt-1">
-              <span>Explore Routes</span>
+            <div className="flex items-center text-xs font-semibold text-cyan-400 gap-1 pt-1">
+              <span>Evaluate Routes</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -236,26 +221,26 @@ export const HomePage: React.FC = () => {
           {/* Card 4 */}
           <div
             onClick={() => navigate('/sap')}
-            className="flex-none w-[85%] sm:w-80 md:w-auto snap-center cursor-pointer glass-panel p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 space-y-4 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/30 active:scale-[0.98]"
+            className="cursor-pointer bg-slate-900/90 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors space-y-3"
           >
             <div className="flex items-center justify-between">
-              <div className="w-12 h-12 rounded-xl bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
-                <Server className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center text-indigo-400">
+                <Server className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-mono text-indigo-400 font-bold px-2 py-0.5 rounded bg-indigo-950 border border-indigo-800">
-                SAP BTP
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                SAP BTP SUITE
               </span>
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-lg font-extrabold text-white">SAP Integration</h3>
+              <h3 className="text-base font-bold text-white">SAP Integration</h3>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Connect intelligent decisions directly with SAP Transportation Management systems.
+                Bridges intelligent AI decision outputs directly into SAP Transportation Management (TM) OData REST services.
               </p>
             </div>
 
-            <div className="flex items-center text-xs font-bold text-indigo-400 gap-1.5 pt-1">
-              <span>View SAP Layer</span>
+            <div className="flex items-center text-xs font-semibold text-indigo-400 gap-1 pt-1">
+              <span>Inspect SAP Layer</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -264,41 +249,41 @@ export const HomePage: React.FC = () => {
 
       </section>
 
-      {/* 4. Problem → Solution Stack */}
+      {/* 4. Problem vs Solution Grid */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         
-        <div className="glass-panel p-6 sm:p-10 rounded-3xl border border-white/10 space-y-6 bg-slate-950">
+        <div className="bg-slate-900/90 p-6 sm:p-8 rounded-xl border border-slate-800 space-y-6">
           
           <div className="text-center space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">THE PROBLEM VS THE SOLUTION</h2>
-            <p className="text-xs text-slate-400">How SmartEvac AI transforms traditional supply chain gridlocks</p>
+            <h2 className="text-xl font-bold text-white">PROBLEM VS SOLUTION</h2>
+            <p className="text-xs text-slate-400">How SmartEvac AI transforms landside port gridlocks</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <div className="bg-rose-950/20 p-5 rounded-2xl border border-rose-500/30 space-y-3">
+            <div className="bg-slate-950 p-5 rounded-lg border border-rose-900/40 space-y-3">
               <div className="flex items-center gap-2 text-rose-400 font-mono text-xs font-bold uppercase">
                 <AlertOctagon className="w-4 h-4" />
-                <span>THE TRADITIONAL PROBLEM</span>
+                <span>LANDSIDE PORT CONGESTION</span>
               </div>
               
-              <ul className="space-y-2 font-mono text-xs text-rose-200">
-                <li className="p-2 rounded bg-rose-900/30 border border-rose-800/40">🚨 PORT CONGESTION: 31% dwell spike</li>
-                <li className="p-2 rounded bg-rose-900/30 border border-rose-800/40">⏳ ROAD DELAY: +8.2 hours lost on NH48</li>
-                <li className="p-2 rounded bg-rose-900/30 border border-rose-800/40">💸 COST EXPOSURE: ₹18.4L demurrage risk</li>
+              <ul className="space-y-2 font-mono text-xs text-slate-300">
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">🚨 JNPA GATE DWELL: +31% delay spike</li>
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">⏳ NH48 BOTTLENECK: +8.2 hours toll queue delay</li>
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">💸 DEMURRAGE EXPOSURE: ₹18.4 Lakhs batch risk</li>
               </ul>
             </div>
 
-            <div className="bg-emerald-950/20 p-5 rounded-2xl border border-emerald-500/30 space-y-3">
+            <div className="bg-slate-950 p-5 rounded-lg border border-emerald-900/40 space-y-3">
               <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold uppercase">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>THE SMARTEVAC AI SOLUTION</span>
+                <span>SMARTEVAC AUTOMATED REROUTING</span>
               </div>
 
-              <ul className="space-y-2 font-mono text-xs text-emerald-200">
-                <li className="p-2 rounded bg-emerald-900/30 border border-emerald-800/40">⚡ INSTANT REROUTE: 120 containers to WDFC Rail</li>
-                <li className="p-2 rounded bg-emerald-900/30 border border-emerald-800/40">⏱ TIME SAVED: 7.2 hours faster arrival</li>
-                <li className="p-2 rounded bg-emerald-900/30 border border-emerald-800/40">💰 COST SAVED: ₹5.4 Lakhs direct freight savings</li>
+              <ul className="space-y-2 font-mono text-xs text-slate-300">
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">⚡ WDFC RAIL TRANSFER: 120 TEU reassigned</li>
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">⏱ SLA GUARANTEE: -7.2 hours transit time reduction</li>
+                <li className="p-2 rounded bg-slate-900 border border-slate-800">💰 NET COST SAVINGS: ₹5.4 Lakhs total batch savings</li>
               </ul>
             </div>
 
@@ -308,30 +293,30 @@ export const HomePage: React.FC = () => {
 
       </section>
 
-      {/* 5. Mobile Live Demo CTA Banner */}
+      {/* 5. Live Simulation CTA Banner */}
       <section className="max-w-7xl mx-auto px-4 lg:px-8">
         
-        <div className="glass-card-accent p-8 sm:p-12 rounded-3xl border border-cyan-500/50 text-center space-y-4 bg-slate-950 shadow-glow-cyan">
+        <div className="bg-slate-900 p-8 sm:p-10 rounded-xl border border-slate-800 text-center space-y-4">
           
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-mono font-bold">
-            <Zap className="w-4 h-4 text-cyan-400" />
-            <span>INTERACTIVE DEMO</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-slate-950 text-slate-300 text-xs font-mono font-semibold border border-slate-800">
+            <Activity className="w-4 h-4 text-blue-400" />
+            <span>EXECUTIVE DEMONSTRATION MODE</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-            SEE SMARTevac THINK.
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+            RUN LIVE MULTI-AGENT SIMULATION
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
-            Watch five AI agents respond to a real-time logistics disruption across JNPA Port, NH48, and WDFC Rail.
+            Observe the 5 AI micro-agents execute sensing, pathway calculation, financial risk assessment, decision policy, and document filing in real time.
           </p>
 
           <button
             onClick={() => navigate('/operations?demo=true')}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 hover:from-cyan-300 hover:to-blue-400 text-black font-extrabold text-base transition-all shadow-glow-cyan active:scale-95 min-h-[48px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-sm transition-all shadow-subtle active:scale-[0.99]"
           >
-            <Play className="w-5 h-5 fill-black" />
-            <span>▶ RUN LIVE SIMULATION</span>
+            <Play className="w-4 h-4 text-emerald-400 fill-emerald-400" />
+            <span>▶ Execute Live Simulation</span>
           </button>
 
         </div>
