@@ -2,20 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
+/* SAP Fiori Light Horizon (Default Theme) */
+:root, [data-theme="light"] {
+  --bg-app: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-inset: #F1F5F9;
+  --bg-surface-hover: #E2E8F0;
+  --border-color: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --accent-blue: #0284C7;
+  --accent-emerald: #059669;
+  --accent-rose: #DC2626;
+  --accent-amber: #D97706;
+  --nav-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.9);
+}
+
+/* SAP Horizon Dark Theme */
+[data-theme="dark"] {
+  --bg-app: #0A0D14;
+  --bg-surface: #111827;
+  --bg-surface-inset: #0F172A;
+  --bg-surface-hover: #1F2937;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text-primary: #F9FAFB;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --accent-blue: #3B82F6;
+  --accent-emerald: #10B981;
+  --accent-rose: #EF4444;
+  --accent-amber: #F59E0B;
+  --nav-bg: rgba(10, 13, 20, 0.95);
+  --card-bg: rgba(17, 24, 39, 0.9);
+}
+
+/* Palantir Midnight Navy Theme */
+[data-theme="navy"] {
+  --bg-app: #080E1E;
+  --bg-surface: #0F172A;
+  --bg-surface-inset: #020617;
+  --bg-surface-hover: #1E293B;
+  --border-color: rgba(59, 130, 246, 0.15);
+  --border-strong: rgba(59, 130, 246, 0.3);
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent-blue: #2563EB;
+  --accent-emerald: #059669;
+  --accent-rose: #E11D48;
+  --accent-amber: #D97706;
+  --nav-bg: rgba(8, 14, 30, 0.95);
+  --card-bg: rgba(15, 23, 42, 0.9);
+}
+
+/* Emerald Logistics Matrix Theme */
+[data-theme="emerald"] {
+  --bg-app: #061412;
+  --bg-surface: #0B2420;
+  --bg-surface-inset: #030F0D;
+  --bg-surface-hover: #133933;
+  --border-color: rgba(16, 185, 129, 0.18);
+  --border-strong: rgba(16, 185, 129, 0.35);
+  --text-primary: #ECFDF5;
+  --text-secondary: #A7F3D0;
+  --text-muted: #6EE7B7;
+  --accent-blue: #0EA5E9;
+  --accent-emerald: #10B981;
+  --accent-rose: #F43F5E;
+  --accent-amber: #F59E0B;
+  --nav-bg: rgba(6, 20, 18, 0.95);
+  --card-bg: rgba(11, 36, 32, 0.9);
+}
+
 @layer base {
   body {
-    background-color: #0A0D14;
-    color: #F9FAFB;
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Professional Enterprise Glass & Card Panels */
+/* Dynamic Enterprise Glass & Card Panels */
 .glass-panel {
-  background: rgba(17, 24, 39, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .glass-panel-hover {
@@ -23,13 +101,8 @@
 }
 
 .glass-panel-hover:hover {
-  background: rgba(31, 41, 55, 0.9);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.glass-card-accent {
-  background: linear-gradient(180deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-surface-hover);
+  border-color: var(--border-strong);
 }
 
 /* Custom Scrollbar */
@@ -39,33 +112,29 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0D14;
+  background: var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1F2937;
+  background: var(--border-strong);
   border-radius: 2px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #374151;
-}
-
-/* Leaflet dark custom tiles override */
+/* Leaflet map theme adjustments */
 .leaflet-container {
-  background-color: #0A0D14 !important;
+  background-color: var(--bg-app) !important;
   font-family: inherit;
   border-radius: 0.75rem;
 }
 
 .leaflet-popup-content-wrapper {
-  background: #111827 !important;
-  color: #F9FAFB !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color);
   border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2) !important;
 }
 
 .leaflet-popup-tip {
-  background: #111827 !important;
+  background: var(--bg-surface) !important;
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
 import { MoreBottomSheet } from './components/MoreBottomSheet';
@@ -17,7 +18,7 @@ import { DocumentsPage } from './pages/DocumentsPage';
 import { AuditPage } from './pages/AuditPage';
 import { ArchitecturePage } from './pages/ArchitecturePage';
 
-import { Settings, Info, ShieldCheck, Zap } from 'lucide-react';
+import { Settings, Zap, Palette, Sun, Moon, Compass } from 'lucide-react';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -47,112 +48,140 @@ function AnimatedRoutes() {
   );
 }
 
-export function App() {
+function MainLayout() {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-[#080B11] text-slate-100 font-sans flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
-        
-        {/* PWA Custom Home-Screen Install Prompt */}
-        <InstallPwaPrompt />
+    <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] font-sans flex flex-col justify-between transition-colors">
+      
+      {/* PWA Custom Home-Screen Install Prompt */}
+      <InstallPwaPrompt />
 
-        {/* Global Navigation Header */}
-        <Navbar onOpenMore={() => setIsMoreOpen(true)} />
+      {/* Global Navigation Header */}
+      <Navbar onOpenMore={() => setIsMoreOpen(true)} />
 
-        {/* Page Content */}
-        <AnimatedRoutes />
+      {/* Page Content */}
+      <AnimatedRoutes />
 
-        {/* Mobile App Bottom Navigation Bar */}
-        <BottomNav
-          onOpenMore={() => setIsMoreOpen(true)}
-          isMoreOpen={isMoreOpen}
-        />
+      {/* Mobile App Bottom Navigation Bar */}
+      <BottomNav
+        onOpenMore={() => setIsMoreOpen(true)}
+        isMoreOpen={isMoreOpen}
+      />
 
-        {/* Mobile App More Bottom Sheet Drawer */}
-        <MoreBottomSheet
-          isOpen={isMoreOpen}
-          onClose={() => setIsMoreOpen(false)}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onOpenAbout={() => setIsAboutOpen(true)}
-        />
+      {/* Mobile App More Bottom Sheet Drawer */}
+      <MoreBottomSheet
+        isOpen={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
+      />
 
-        {/* Settings Modal */}
-        {isSettingsOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-            <div className="relative w-full max-w-sm glass-panel rounded-2xl border border-cyan-500/40 p-6 space-y-4 bg-slate-950">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold">
-                  <Settings className="w-5 h-5" />
-                  <span>Mobile App Settings</span>
-                </div>
-                <button onClick={() => setIsSettingsOpen(false)} className="text-slate-400 p-1">✕</button>
+      {/* Settings Modal */}
+      {isSettingsOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-sm glass-panel rounded-2xl border border-[var(--border-strong)] p-6 space-y-4 bg-[var(--bg-surface)]">
+            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+              <div className="flex items-center gap-2 text-blue-500 font-bold">
+                <Settings className="w-5 h-5" />
+                <span>Mobile App Settings</span>
               </div>
-
-              <div className="space-y-3 text-xs font-mono">
-                <div className="bg-slate-900 p-3 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>UI Theme</span>
-                  <span className="text-cyan-400 font-bold">Dark Glassmorphism</span>
-                </div>
-                <div className="bg-slate-900 p-3 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>SAP BTP Gateway</span>
-                  <span className="text-emerald-400 font-bold">OData REST v2.4</span>
-                </div>
-                <div className="bg-slate-900 p-3 rounded-xl border border-white/10 flex justify-between items-center">
-                  <span>PWA Standalone Mode</span>
-                  <span className="text-cyan-400 font-bold">Active</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setIsSettingsOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow-glow-cyan"
-              >
-                Done
-              </button>
+              <button onClick={() => setIsSettingsOpen(false)} className="text-[var(--text-muted)] p-1">✕</button>
             </div>
-          </div>
-        )}
 
-        {/* About Modal */}
-        {isAboutOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-            <div className="relative w-full max-w-md glass-panel rounded-2xl border border-cyan-500/40 p-6 space-y-4 bg-slate-950">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold">
-                  <Zap className="w-5 h-5 fill-cyan-400" />
-                  <span>About SmartEvac AI</span>
+            <div className="space-y-3 text-xs font-mono">
+              <div className="bg-[var(--bg-surface-inset)] p-3 rounded-xl border border-[var(--border-color)] space-y-2">
+                <span className="text-[var(--text-secondary)] font-bold block">UI Theme Preference</span>
+                <div className="grid grid-cols-2 gap-1.5 pt-1">
+                  <button
+                    onClick={() => setTheme('light')}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 font-bold ${
+                      theme === 'light' ? 'bg-blue-600 text-white' : 'bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-color)]'
+                    }`}
+                  >
+                    <Sun className="w-3.5 h-3.5" /> Fiori Light
+                  </button>
+                  <button
+                    onClick={() => setTheme('dark')}
+                    className={`px-2.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 font-bold ${
+                      theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border-color)]'
+                    }`}
+                  >
+                    <Moon className="w-3.5 h-3.5" /> Horizon Dark
+                  </button>
                 </div>
-                <button onClick={() => setIsAboutOpen(false)} className="text-slate-400 p-1">✕</button>
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                SmartEvac AI is an enterprise multi-agent logistics intelligence command center built for SAP BTP. It monitors landside port congestion, evaluates multi-modal pathways (Highway NH48, WDFC Rail, Coastal Feed), and automates customs filings.
-              </p>
-
-              <div className="bg-slate-900 p-3 rounded-xl border border-white/10 text-xs font-mono space-y-1 text-slate-200">
-                <div>• Version: <strong className="text-cyan-400">1.0.0 (PWA Enabled)</strong></div>
-                <div>• Engine: <strong className="text-emerald-400">CrewAI + OpenAI GPT-4o</strong></div>
-                <div>• Integration: <strong className="text-indigo-400">SAP TM OData Gateway</strong></div>
+              <div className="bg-[var(--bg-surface-inset)] p-3 rounded-xl border border-[var(--border-color)] flex justify-between items-center">
+                <span>SAP BTP Gateway</span>
+                <span className="text-emerald-500 font-bold">OData REST v2.4</span>
               </div>
 
-              <button
-                onClick={() => setIsAboutOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-cyan-400 text-black font-extrabold text-xs shadow-glow-cyan"
-              >
-                Close
-              </button>
+              <div className="bg-[var(--bg-surface-inset)] p-3 rounded-xl border border-[var(--border-color)] flex justify-between items-center">
+                <span>PWA Standalone Mode</span>
+                <span className="text-blue-500 font-bold">Active</span>
+              </div>
             </div>
+
+            <button
+              onClick={() => setIsSettingsOpen(false)}
+              className="w-full py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-app)] font-extrabold text-xs shadow-subtle"
+            >
+              Save & Close
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Footer */}
-        <Footer />
+      {/* About Modal */}
+      {isAboutOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-md glass-panel rounded-2xl border border-[var(--border-strong)] p-6 space-y-4 bg-[var(--bg-surface)]">
+            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+              <div className="flex items-center gap-2 text-blue-500 font-bold">
+                <Zap className="w-5 h-5" />
+                <span>About SmartEvac AI</span>
+              </div>
+              <button onClick={() => setIsAboutOpen(false)} className="text-[var(--text-muted)] p-1">✕</button>
+            </div>
 
-      </div>
-    </BrowserRouter>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed font-sans">
+              SmartEvac AI is an enterprise multi-agent logistics intelligence command center built for SAP BTP. It monitors landside port congestion, evaluates multi-modal pathways (Highway NH48, WDFC Rail, Coastal Feed), and automates customs filings.
+            </p>
+
+            <div className="bg-[var(--bg-surface-inset)] p-3 rounded-xl border border-[var(--border-color)] text-xs font-mono space-y-1 text-[var(--text-primary)]">
+              <div>• Version: <strong className="text-blue-500">1.0.0 (PWA Enabled)</strong></div>
+              <div>• Theme: <strong className="text-amber-500">{theme.toUpperCase()} HORIZON</strong></div>
+              <div>• Integration: <strong className="text-emerald-500">SAP TM OData Gateway</strong></div>
+            </div>
+
+            <button
+              onClick={() => setIsAboutOpen(false)}
+              className="w-full py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-app)] font-extrabold text-xs shadow-subtle"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <Footer />
+
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <MainLayout />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
