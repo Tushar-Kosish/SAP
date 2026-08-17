@@ -1,0 +1,24 @@
+{
+  "name": "SmartEvac AI Logistics Command Center",
+  "short_name": "SmartEvac",
+  "description": "Multi-Agent AI Intelligent Logistics & Route-Rerouting Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080B11",
+  "theme_color": "#00F2FE",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
