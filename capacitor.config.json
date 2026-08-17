@@ -1,0 +1,9 @@
+{
+  "appId": "ai.smartevac.app",
+  "appName": "SmartEvac AI",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
