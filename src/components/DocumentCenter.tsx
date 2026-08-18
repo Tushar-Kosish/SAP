@@ -28,15 +28,15 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({ documents }) => 
       const pdf = new jsPDF();
 
       // Header Banner
-      pdf.setFillColor(15, 23, 42); // #0F172A
+      pdf.setFillColor(37, 99, 235); // #2563EB Blue
       pdf.rect(0, 0, 210, 40, 'F');
       
-      pdf.setTextColor(0, 242, 254); // Cyan
+      pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(22);
       pdf.setFont('helvetica', 'bold');
       pdf.text('SmartEvac AI', 15, 20);
 
-      pdf.setTextColor(255, 255, 255);
+      pdf.setTextColor(239, 246, 255);
       pdf.setFontSize(12);
       pdf.setFont('helvetica', 'normal');
       pdf.text('Multi-Agent Logistics Intelligence Platform | SAP BTP', 15, 30);
@@ -100,21 +100,21 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({ documents }) => 
   };
 
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-white/10 shadow-card space-y-6">
+    <div className="glass-panel p-6 shadow-md space-y-6 font-sans">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
             <FileCheck className="w-4 h-4" />
             AUTOMATED COMPLIANCE & CUSTOMS FILINGS
           </div>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight">
-            AI GENERATED DOCUMENTS
+          <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
+            AI Generated Customs Documents
           </h2>
         </div>
 
-        <div className="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-white/10">
+        <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
           PDF Generation Engine: Active
         </div>
       </div>
@@ -124,46 +124,46 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({ documents }) => 
         {documents.map((doc) => (
           <div
             key={doc.id}
-            className="glass-panel glass-panel-hover p-5 rounded-xl border border-white/10 space-y-4 flex flex-col justify-between"
+            className="glass-panel glass-panel-hover p-6 border border-[var(--border-color)] space-y-4 flex flex-col justify-between"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] font-mono font-bold uppercase">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 text-[10px] font-extrabold uppercase">
                   {doc.category}
                 </span>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-[11px] font-semibold text-[var(--text-muted)]">
                   {doc.fileSize}
                 </span>
               </div>
 
-              <h3 className="text-base font-extrabold text-white">{doc.title}</h3>
-              <div className="text-xs font-mono text-slate-400">Ref: {doc.referenceNo}</div>
+              <h3 className="text-base font-extrabold text-[var(--text-primary)]">{doc.title}</h3>
+              <div className="text-xs font-medium text-[var(--text-muted)]">Ref: {doc.referenceNo}</div>
               
-              <p className="text-xs text-slate-300 leading-relaxed pt-1">
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed pt-1 font-medium">
                 {doc.summary}
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-2 pt-3 border-t border-white/10">
+            <div className="flex items-center gap-2 pt-3 border-t border-[var(--border-color)]">
               
               <button
                 onClick={() => setSelectedDoc(doc)}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-bold transition-all border border-white/10"
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-[var(--bg-surface-inset)] hover:bg-[var(--bg-surface-hover)] text-[var(--text-primary)] text-xs font-bold transition-all border border-[var(--border-color)]"
               >
-                <Eye className="w-3.5 h-3.5" />
+                <Eye className="w-4 h-4 text-blue-500" />
                 <span>Preview</span>
               </button>
 
               <button
                 onClick={() => handleGenerateAndDownloadPDF(doc)}
                 disabled={isGenerating === doc.id}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black text-xs font-extrabold transition-all shadow-glow-cyan"
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold transition-all shadow-md shadow-blue-500/25"
               >
                 {isGenerating === doc.id ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                 ) : (
-                  <Download className="w-3.5 h-3.5 fill-black" />
+                  <Download className="w-4 h-4 fill-white" />
                 )}
                 <span>Generate PDF</span>
               </button>
@@ -176,50 +176,50 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({ documents }) => 
 
       {/* PDF Preview Modal */}
       {selectedDoc && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
           
-          <div className="relative w-full max-w-2xl glass-panel rounded-2xl border border-cyan-500/40 p-6 space-y-6 bg-slate-950 max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-2xl glass-panel rounded-2xl border border-[var(--border-strong)] p-6 space-y-6 bg-[var(--bg-surface)] max-h-[90vh] overflow-y-auto">
             
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4">
               <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-cyan-400" />
+                <FileText className="w-6 h-6 text-blue-500" />
                 <div>
-                  <h3 className="text-lg font-extrabold text-white">{selectedDoc.title}</h3>
-                  <div className="text-xs font-mono text-slate-400">Ref: {selectedDoc.referenceNo}</div>
+                  <h3 className="text-lg font-extrabold text-[var(--text-primary)]">{selectedDoc.title}</h3>
+                  <div className="text-xs font-medium text-[var(--text-muted)]">Ref: {selectedDoc.referenceNo}</div>
                 </div>
               </div>
 
               <button
                 onClick={() => setSelectedDoc(null)}
-                className="text-slate-400 hover:text-white text-xl font-bold p-1"
+                className="text-[var(--text-muted)] hover:text-[var(--text-primary)] text-xl font-bold p-1"
               >
                 ✕
               </button>
             </div>
 
             {/* Document Content Sheet Preview */}
-            <div className="bg-slate-900 p-6 rounded-xl border border-white/10 space-y-4 text-xs font-sans">
+            <div className="bg-[var(--bg-surface-inset)] p-6 rounded-xl border border-[var(--border-color)] space-y-4 text-xs font-sans">
               
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="text-cyan-400 font-bold font-mono text-sm">SmartEvac AI Document System</div>
-                <div className="text-emerald-400 font-mono text-xs">✓ SAP BTP Verified</div>
+              <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+                <div className="text-blue-600 dark:text-blue-400 font-bold text-sm">SmartEvac AI Document System</div>
+                <div className="text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓ SAP BTP Verified</div>
               </div>
 
               <div className="space-y-1">
-                <div className="font-bold text-white text-sm">{selectedDoc.title}</div>
-                <div className="text-slate-400 font-mono">Date: {selectedDoc.dateGenerated}</div>
+                <div className="font-bold text-[var(--text-primary)] text-sm">{selectedDoc.title}</div>
+                <div className="text-[var(--text-muted)] font-medium">Date: {selectedDoc.dateGenerated}</div>
               </div>
 
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-[var(--text-secondary)] leading-relaxed font-medium">
                 {selectedDoc.summary}
               </p>
 
-              <div className="bg-slate-950 p-4 rounded-lg border border-white/5 space-y-2 font-mono">
-                <div className="text-slate-400 font-bold text-[10px] uppercase">CONTAINER DISPATCH PARAMETERS</div>
-                <div className="text-slate-200">Corridor: JNPA Terminal → ICD Dadri</div>
-                <div className="text-slate-200">Reassigned TEU: 120 Containers</div>
-                <div className="text-slate-200">WDFC Rake: CONCOR #WDFC-984</div>
-                <div className="text-emerald-400 font-bold">Estimated Cost Savings: ₹5.4 Lakhs</div>
+              <div className="bg-[var(--bg-surface)] p-4 rounded-xl border border-[var(--border-color)] space-y-2 font-medium">
+                <div className="text-[var(--text-muted)] font-bold text-[10px] uppercase">CONTAINER DISPATCH PARAMETERS</div>
+                <div className="text-[var(--text-primary)]">Corridor: JNPA Terminal → ICD Dadri</div>
+                <div className="text-[var(--text-primary)]">Reassigned TEU: 120 Containers</div>
+                <div className="text-[var(--text-primary)]">WDFC Rake: CONCOR #WDFC-984</div>
+                <div className="text-emerald-600 dark:text-emerald-400 font-bold">Estimated Cost Savings: ₹5.4 Lakhs</div>
               </div>
 
             </div>
@@ -228,16 +228,16 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({ documents }) => 
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setSelectedDoc(null)}
-                className="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 text-xs font-bold border border-white/10"
+                className="px-4 py-2.5 rounded-xl bg-[var(--bg-surface-inset)] text-[var(--text-primary)] text-xs font-bold border border-[var(--border-color)]"
               >
                 Close
               </button>
 
               <button
                 onClick={() => handleGenerateAndDownloadPDF(selectedDoc)}
-                className="flex items-center gap-2 px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black text-xs font-bold shadow-glow-cyan"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold shadow-md shadow-blue-500/25"
               >
-                <Download className="w-4 h-4 fill-black" />
+                <Download className="w-4 h-4 fill-white" />
                 <span>Download Official PDF</span>
               </button>
             </div>

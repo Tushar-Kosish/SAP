@@ -43,100 +43,100 @@ export const HeroCommandCenter: React.FC<HeroCommandCenterProps> = ({ metrics })
   }, [metrics]);
 
   return (
-    <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800 shadow-panel">
+    <div className="glass-panel p-6 shadow-md transition-all space-y-6">
       
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5 pb-4 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-[var(--border-color)]">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase">
-            <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-            REAL-TIME TELEMETRY FEED
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
+            REAL-TIME CORRIDOR TELEMETRY
           </div>
-          <h2 className="text-xl font-extrabold text-white tracking-tight">
-            LIVE LOGISTICS COMMAND CENTER
+          <h2 className="text-xl font-extrabold text-[var(--text-primary)] tracking-tight">
+            Live Logistics Command Center
           </h2>
         </div>
 
-        <div className="flex items-center gap-2.5 bg-slate-950 px-3.5 py-1.5 rounded-lg border border-slate-800 text-xs font-mono">
-          <Navigation className="w-3.5 h-3.5 text-blue-400" />
-          <span className="text-slate-400">Corridor:</span>
-          <span className="font-bold text-white">JNPA (Mumbai) → Delhi NCR</span>
+        <div className="flex items-center gap-2.5 bg-[var(--bg-surface-inset)] px-4 py-2 rounded-xl border border-[var(--border-color)] text-xs font-semibold">
+          <Navigation className="w-4 h-4 text-blue-500" />
+          <span className="text-[var(--text-muted)]">Corridor:</span>
+          <span className="font-bold text-[var(--text-primary)]">JNPA (Mumbai) → Delhi NCR</span>
         </div>
       </div>
 
       {/* 6 Key Metric Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
         
         {/* Card 1: Containers in Transit */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-slate-800 space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-mono">Containers</span>
-            <Package className="w-3.5 h-3.5 text-blue-400" />
+        <div className="bg-[var(--bg-surface-inset)] p-4 rounded-2xl border border-[var(--border-color)] space-y-1 hover:border-blue-500/30 transition-colors">
+          <div className="flex items-center justify-between text-[var(--text-muted)]">
+            <span className="text-[11px] font-semibold">Containers</span>
+            <Package className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-xl font-bold text-white font-mono">
+          <div className="text-2xl font-black text-[var(--text-primary)]">
             {containers.toLocaleString()}
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">TEU in Corridor</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-medium">TEU in Corridor</div>
         </div>
 
         {/* Card 2: Active Shipments */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-slate-800 space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-mono">Shipments</span>
-            <Truck className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="bg-[var(--bg-surface-inset)] p-4 rounded-2xl border border-[var(--border-color)] space-y-1 hover:border-cyan-500/30 transition-colors">
+          <div className="flex items-center justify-between text-[var(--text-muted)]">
+            <span className="text-[11px] font-semibold">Shipments</span>
+            <Truck className="w-4 h-4 text-cyan-500" />
           </div>
-          <div className="text-xl font-bold text-white font-mono">
+          <div className="text-2xl font-black text-[var(--text-primary)]">
             {shipments}
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">Active Convoys</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-medium">Active Convoys</div>
         </div>
 
         {/* Card 3: Current Disruptions */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-amber-900/50 space-y-1">
-          <div className="flex items-center justify-between text-amber-400">
-            <span className="text-[11px] font-mono font-semibold">Disruptions</span>
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+        <div className="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/30 space-y-1">
+          <div className="flex items-center justify-between text-amber-600 dark:text-amber-400">
+            <span className="text-[11px] font-bold">Disruptions</span>
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-xl font-bold text-amber-300 font-mono">
+          <div className="text-2xl font-black text-amber-600 dark:text-amber-400">
             {metrics.currentDisruptions}
           </div>
-          <div className="text-[10px] text-amber-400/80 font-mono">1 Critical Alert</div>
+          <div className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-medium">1 Critical Alert</div>
         </div>
 
         {/* Card 4: Average Delay */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-rose-900/50 space-y-1">
-          <div className="flex items-center justify-between text-rose-400">
-            <span className="text-[11px] font-mono font-semibold">Avg Delay</span>
-            <Clock className="w-3.5 h-3.5 text-rose-400" />
+        <div className="bg-rose-500/10 p-4 rounded-2xl border border-rose-500/30 space-y-1">
+          <div className="flex items-center justify-between text-rose-600 dark:text-rose-400">
+            <span className="text-[11px] font-bold">Avg Delay</span>
+            <Clock className="w-4 h-4 text-rose-500" />
           </div>
-          <div className="text-xl font-bold text-rose-300 font-mono">
+          <div className="text-2xl font-black text-rose-600 dark:text-rose-400">
             +{metrics.averageDelayHours} hrs
           </div>
-          <div className="text-[10px] text-rose-400/80 font-mono">NH48 Toll Bottleneck</div>
+          <div className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-medium">NH48 Toll Queue</div>
         </div>
 
         {/* Card 5: Cost Exposure */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-slate-800 space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-mono">Cost Exposure</span>
-            <IndianRupee className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="bg-[var(--bg-surface-inset)] p-4 rounded-2xl border border-[var(--border-color)] space-y-1 hover:border-emerald-500/30 transition-colors">
+          <div className="flex items-center justify-between text-[var(--text-muted)]">
+            <span className="text-[11px] font-semibold">Cost Exposure</span>
+            <IndianRupee className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-xl font-bold text-emerald-400 font-mono">
+          <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
             ₹{cost}L
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">Demurrage Risk</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-medium">Demurrage Risk</div>
         </div>
 
         {/* Card 6: CO₂ Exposure */}
-        <div className="bg-slate-950 p-3.5 rounded-lg border border-slate-800 space-y-1">
-          <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-mono">CO₂ Footprint</span>
-            <Leaf className="w-3.5 h-3.5 text-indigo-400" />
+        <div className="bg-[var(--bg-surface-inset)] p-4 rounded-2xl border border-[var(--border-color)] space-y-1 hover:border-indigo-500/30 transition-colors">
+          <div className="flex items-center justify-between text-[var(--text-muted)]">
+            <span className="text-[11px] font-semibold">CO₂ Footprint</span>
+            <Leaf className="w-4 h-4 text-indigo-500" />
           </div>
-          <div className="text-xl font-bold text-white font-mono">
+          <div className="text-2xl font-black text-[var(--text-primary)]">
             {metrics.co2ExposureTons} t
           </div>
-          <div className="text-[10px] text-slate-400 font-mono">Corridor Emission</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-medium">Corridor Emission</div>
         </div>
 
       </div>

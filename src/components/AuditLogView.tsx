@@ -8,27 +8,27 @@ interface AuditLogViewProps {
 
 export const AuditLogView: React.FC<AuditLogViewProps> = ({ logs }) => {
   return (
-    <div className="glass-panel p-6 rounded-2xl border border-white/10 shadow-card space-y-6">
+    <div className="glass-panel p-6 shadow-md space-y-6 font-sans">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-color)]">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
             <Clock className="w-4 h-4" />
             ENTERPRISE GOVERNANCE & COMPLIANCE
           </div>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight">
-            AI DECISION AUDIT LOG
+          <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
+            AI Decision Audit Log
           </h2>
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-slate-300 hover:bg-slate-800">
-            <Filter className="w-3.5 h-3.5" />
+          <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--bg-surface-inset)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]">
+            <Filter className="w-3.5 h-3.5 text-blue-500" />
             <span>Filter Severity</span>
           </button>
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-xs font-mono text-slate-300 hover:bg-slate-800">
-            <Download className="w-3.5 h-3.5" />
+          <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--bg-surface-inset)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]">
+            <Download className="w-3.5 h-3.5 text-blue-500" />
             <span>Export CSV</span>
           </button>
         </div>
@@ -38,7 +38,7 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ logs }) => {
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm font-sans border-collapse">
           <thead>
-            <tr className="border-b border-white/10 text-xs font-mono text-slate-400 uppercase tracking-wider">
+            <tr className="border-b border-[var(--border-color)] text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
               <th className="py-3 px-4">Timestamp</th>
               <th className="py-3 px-4">Agent Name</th>
               <th className="py-3 px-4">Action</th>
@@ -47,47 +47,47 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({ logs }) => {
               <th className="py-3 px-4 text-right">SAP Ref</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 font-mono text-xs">
+          <tbody className="divide-y divide-[var(--border-color)] text-xs">
             {logs.map((entry) => (
-              <tr key={entry.id} className="hover:bg-slate-900/60 transition-colors">
+              <tr key={entry.id} className="hover:bg-[var(--bg-surface-hover)] transition-colors">
                 
                 {/* Timestamp */}
-                <td className="py-3.5 px-4 text-cyan-400 font-bold whitespace-nowrap">
+                <td className="py-3.5 px-4 text-blue-600 dark:text-blue-400 font-extrabold whitespace-nowrap font-mono">
                   {entry.timestamp}
                 </td>
 
                 {/* Agent */}
-                <td className="py-3.5 px-4 font-bold text-white font-sans whitespace-nowrap">
+                <td className="py-3.5 px-4 font-extrabold text-[var(--text-primary)] whitespace-nowrap">
                   {entry.agentName}
                 </td>
 
                 {/* Action */}
-                <td className="py-3.5 px-4 text-slate-200 whitespace-nowrap">
+                <td className="py-3.5 px-4 text-[var(--text-secondary)] font-medium whitespace-nowrap">
                   {entry.action}
                 </td>
 
                 {/* Severity */}
                 <td className="py-3.5 px-4">
-                  <span className={`px-2 py-0.5 rounded font-bold ${
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                     entry.severity === 'CRITICAL'
-                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                      ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30'
                       : entry.severity === 'SUCCESS'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
                       : entry.severity === 'WARNING'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                      : 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                      ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                      : 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/30'
                   }`}>
                     {entry.severity}
                   </span>
                 </td>
 
                 {/* Details */}
-                <td className="py-3.5 px-4 text-slate-300 max-w-md truncate font-sans">
+                <td className="py-3.5 px-4 text-[var(--text-secondary)] font-medium max-w-md truncate">
                   {entry.details}
                 </td>
 
                 {/* Ref */}
-                <td className="py-3.5 px-4 text-right text-slate-400 font-mono">
+                <td className="py-3.5 px-4 text-right text-[var(--text-muted)] font-mono font-semibold">
                   {entry.transactionRef || '—'}
                 </td>
 
