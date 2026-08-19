@@ -10,8 +10,14 @@ import {
   X,
   ChevronRight,
   Zap,
-  ShieldCheck
+  Activity,
+  Cpu,
+  MapPin,
+  BookOpen,
+  Truck,
+  UserCheck
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface MoreBottomSheetProps {
   isOpen: boolean;
@@ -26,14 +32,36 @@ export const MoreBottomSheet: React.FC<MoreBottomSheetProps> = ({
   onOpenSettings,
   onOpenAbout,
 }) => {
+  const { user } = useAuth();
   if (!isOpen) return null;
 
-  const moreNavItems = [
-    { path: '/sap', label: 'SAP Integration', icon: <Server className="w-5 h-5 text-indigo-400" />, desc: 'BTP OData REST telemetry layer' },
-    { path: '/documents', label: 'Documents', icon: <FileText className="w-5 h-5 text-cyan-400" />, desc: 'AI-generated CONCOR & customs PDFs' },
-    { path: '/audit', label: 'Audit Log', icon: <Clock className="w-5 h-5 text-emerald-400" />, desc: 'Enterprise governance audit trail' },
-    { path: '/architecture', label: 'Architecture', icon: <GitBranch className="w-5 h-5 text-blue-400" />, desc: 'Multi-tier system topology diagram' },
-  ];
+  // Strictly role-based navigation items — each role only sees their own pages
+  const getNavItems = () => {
+    if (user?.role === 'admin') {
+      return [
+        { path: '/admin', label: 'Control Center', icon: <Zap className="w-5 h-5 text-purple-400" />, desc: 'System governance & emergency overrides' },
+        { path: '/operations', label: 'Live Operations', icon: <Activity className="w-5 h-5 text-emerald-400" />, desc: 'GIS map & real-time disruption monitoring' },
+        { path: '/agents', label: 'AI Agents', icon: <Cpu className="w-5 h-5 text-blue-400" />, desc: 'Multi-agent swarm intelligence' },
+        { path: '/routes', label: 'Routes', icon: <MapPin className="w-5 h-5 text-amber-400" />, desc: 'Corridor evaluation matrix' },
+        { path: '/scm-guidance', label: 'SCM Suite', icon: <BookOpen className="w-5 h-5 text-cyan-400" />, desc: 'World Bank supply chain guidance' },
+        { path: '/sap', label: 'SAP Integration', icon: <Server className="w-5 h-5 text-indigo-400" />, desc: 'BTP OData REST telemetry layer' },
+        { path: '/documents', label: 'Documents', icon: <FileText className="w-5 h-5 text-cyan-400" />, desc: 'AI-generated customs & waybill PDFs' },
+        { path: '/audit', label: 'Audit Log', icon: <Clock className="w-5 h-5 text-emerald-400" />, desc: 'Enterprise governance audit trail' },
+        { path: '/architecture', label: 'Architecture', icon: <GitBranch className="w-5 h-5 text-blue-400" />, desc: 'Multi-tier system topology diagram' },
+      ];
+    }
+    if (user?.role === 'supplier') {
+      return [
+        { path: '/supplier', label: 'Supplier Portal', icon: <Truck className="w-5 h-5 text-emerald-400" />, desc: 'Fleet capacity & dispatch orders' },
+      ];
+    }
+    // customer
+    return [
+      { path: '/client', label: 'My Shipments', icon: <UserCheck className="w-5 h-5 text-indigo-400" />, desc: 'Cargo tracking, ETAs & cost savings' },
+    ];
+  };
+
+  const moreNavItems = getNavItems();
 
   return (
     <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm animate-fadeIn">

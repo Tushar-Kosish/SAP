@@ -20,7 +20,8 @@ import {
   Zap,
   Check,
   ChevronRight,
-  RefreshCw
+  RefreshCw,
+  BookOpen
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -100,8 +101,59 @@ export const HomePage: React.FC = () => {
             </button>
           </div>
 
+          {/* Persona Portals Quick Launch Bar */}
+          <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl mx-auto text-left">
+            <button
+              onClick={() => navigate('/client')}
+              className="p-4 rounded-2xl bg-gradient-to-br from-indigo-900/30 to-blue-900/20 border border-indigo-500/30 hover:border-indigo-500/60 transition-all text-left group shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-indigo-400 uppercase">Client Portal</span>
+                <ArrowRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <div className="text-sm font-extrabold text-[var(--text-primary)] mt-1">Cargo Transparency</div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Track containers, ETAs, carbon savings & approvals</div>
+            </button>
+
+            <button
+              onClick={() => navigate('/supplier')}
+              className="p-4 rounded-2xl bg-gradient-to-br from-emerald-900/30 to-teal-900/20 border border-emerald-500/30 hover:border-emerald-500/60 transition-all text-left group shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-emerald-400 uppercase">Supplier Portal</span>
+                <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <div className="text-sm font-extrabold text-[var(--text-primary)] mt-1">Fleet & Dispatch</div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Manage rakes, AI dispatch orders & SLA payouts</div>
+            </button>
+
+            <button
+              onClick={() => navigate('/scm-guidance')}
+              className="p-4 rounded-2xl bg-gradient-to-br from-blue-900/40 to-indigo-900/30 border border-blue-500/40 hover:border-blue-500/70 transition-all text-left group shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-blue-400 uppercase">World Bank SCM</span>
+                <ArrowRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <div className="text-sm font-extrabold text-[var(--text-primary)] mt-1">Risk & Toolset Suite</div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Supply positioning, vulnerability & ESF standards</div>
+            </button>
+
+            <button
+              onClick={() => navigate('/admin')}
+              className="p-4 rounded-2xl bg-gradient-to-br from-purple-900/30 to-amber-900/20 border border-purple-500/30 hover:border-purple-500/60 transition-all text-left group shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-purple-400 uppercase">Admin Center</span>
+                <ArrowRight className="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <div className="text-sm font-extrabold text-[var(--text-primary)] mt-1">System Governance</div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Role policies, emergency overrides & telemetry</div>
+            </button>
+          </div>
+
           {/* Quick Metrics Ribbon */}
-          <div className="pt-6 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+          <div className="pt-2 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
             <div className="p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-color)] shadow-sm">
               <span className="text-[11px] font-semibold text-[var(--text-muted)] block uppercase tracking-wider">ACTIVE CORRIDOR</span>
               <span className="text-sm font-bold text-[var(--text-primary)]">JNPA → Delhi NCR</span>
@@ -123,6 +175,7 @@ export const HomePage: React.FC = () => {
         </div>
 
       </section>
+
 
       {/* 2. Interactive Telemetry Monitor Widget */}
       <section>

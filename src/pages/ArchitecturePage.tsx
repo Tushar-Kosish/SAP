@@ -108,6 +108,99 @@ export const ArchitecturePage: React.FC = () => {
         </p>
       </div>
 
+      {/* A2A Agent Control Tower Protocol Section matching Architecture Diagram */}
+      <div className="p-6 rounded-2xl bg-[var(--bg-surface)] border border-blue-500/40 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-color)] pb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                A2A Protocol /1.0
+              </span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)]">/.well-known/agent-card.json</span>
+            </div>
+            <h2 className="text-xl font-extrabold text-[var(--text-primary)] mt-1 flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-blue-400" />
+              <span>Control Tower Agent-to-Agent (A2A) Architecture</span>
+            </h2>
+          </div>
+          <a
+            href="http://127.0.0.1:8000/.well-known/agent-card.json"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3.5 py-1.5 rounded-xl bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/30 text-xs font-bold transition-all flex items-center gap-1.5 shrink-0"
+          >
+            <span>View Agent Card Manifest</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* Visual Flow Representation matching user diagram */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          
+          {/* Box 1: USER / Control Tower Frontend */}
+          <div className="p-4 rounded-xl bg-[var(--bg-surface-inset)] border border-blue-500/30 space-y-3">
+            <div className="flex items-center gap-2 text-blue-400 font-bold">
+              <UserCheck className="w-4 h-4" />
+              <span>USER / Control Tower Frontend</span>
+            </div>
+            <p className="text-[11px] text-[var(--text-secondary)] font-sans">
+              Interfaces operator commands to agents via dual A2A RPC channels (8081 & 8082).
+            </p>
+            <div className="space-y-1.5 pt-2 border-t border-[var(--border-color)]">
+              <div className="flex items-center justify-between text-[10px] text-emerald-400">
+                <span>A2A (8081)</span>
+                <span>→ Vision Agent</span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-purple-400">
+                <span>A2A (8082)</span>
+                <span>→ Supplier Agent</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Box 2: AGENTS Layer */}
+          <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/30 space-y-3">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold">
+              <Cpu className="w-4 h-4" />
+              <span>AGENTS LAYER</span>
+            </div>
+            <div className="space-y-2 text-[11px]">
+              <div className="p-2 rounded bg-[var(--bg-surface-inset)] border border-emerald-500/20 space-y-1">
+                <div className="font-bold text-emerald-400">👁️ Vision Agent (Port 8081)</div>
+                <div className="text-[10px] text-[var(--text-muted)] font-sans">Camera & satellite visual disruption sensing</div>
+              </div>
+              <div className="p-2 rounded bg-[var(--bg-surface-inset)] border border-emerald-500/20 space-y-1">
+                <div className="font-bold text-emerald-400">🚚 Supplier Agent (Port 8082)</div>
+                <div className="text-[10px] text-[var(--text-muted)] font-sans">Carrier dispatch & vector routing search</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Box 3: CLOUD SERVICES Layer */}
+          <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/30 space-y-3">
+            <div className="flex items-center gap-2 text-purple-400 font-bold">
+              <Server className="w-4 h-4" />
+              <span>CLOUD SERVICES</span>
+            </div>
+            <div className="space-y-1.5 text-[11px] font-sans">
+              <div className="flex items-center gap-2 text-purple-300 font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Gemini 3 Flash</span>
+              </div>
+              <div className="flex items-center gap-2 text-indigo-300 font-bold">
+                <Database className="w-3.5 h-3.5 text-blue-400" />
+                <span>Vertex AI Embeddings</span>
+              </div>
+              <div className="flex items-center gap-2 text-emerald-300 font-bold">
+                <Server className="w-3.5 h-3.5 text-emerald-400" />
+                <span>AlloyDB PostgreSQL (Port 5432)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       {/* Interactive Architecture Flow Diagram */}
       <div className="glass-panel p-8 shadow-lg space-y-6">
         <div className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">

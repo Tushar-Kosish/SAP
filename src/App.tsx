@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { RoleProvider } from './context/RoleContext';
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
 import { MoreBottomSheet } from './components/MoreBottomSheet';
@@ -18,7 +19,43 @@ import { DocumentsPage } from './pages/DocumentsPage';
 import { AuditPage } from './pages/AuditPage';
 import { ArchitecturePage } from './pages/ArchitecturePage';
 
-import { Settings, Zap, Palette, Sun, Moon, Compass } from 'lucide-react';
+import { ClientPage } from './pages/ClientPage';
+import { SupplierPage } from './pages/SupplierPage';
+import { AdminPage } from './pages/AdminPage';
+import { ScmGuidancePage } from './pages/ScmGuidancePage';
+
+import { Settings, Zap, Sun, Moon } from 'lucide-react';
+
+import { AuthProvider, useAuth, UserRole } from './context/AuthContext';
+
+import { LoginPage } from './pages/LoginPage';
+
+// --- Protected Route & RBAC Role Guard Component ---
+const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: UserRole[] }> = ({ children, allowedRoles }) => {
+  const { isAuthenticated, user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center text-xs font-bold font-mono text-[var(--text-secondary)]">
+        Verifying security token & database credentials...
+      </div>
+    );
+  }
+
+  // Without Login User CANNOT enter website -> Redirect to Login Page
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Role Access Isolation Guard
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    if (user.role === 'admin') return <Navigate to="/admin" replace />;
+    if (user.role === 'supplier') return <Navigate to="/supplier" replace />;
+    return <Navigate to="/client" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -34,14 +71,113 @@ function AnimatedRoutes() {
         className="flex-1"
       >
         <Routes location={location}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/operations" element={<OperationsPage />} />
-          <Route path="/agents" element={<AgentsPage />} />
-          <Route path="/routes" element={<RoutesPage />} />
-          <Route path="/sap" element={<SapPage />} />
-          <Route path="/documents" element={<DocumentsPage />} />
-          <Route path="/audit" element={<AuditPage />} />
-          <Route path="/architecture" element={<ArchitecturePage />} />
+          {/* Public Login & Sign Up Entrance Page */}
+          <Route path="/" element={<LoginPage />} />
+
+          {/* Consumer / Customer Interface & Data */}
+          <Route
+            path="/client"
+            element={
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                <ClientPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Supplier Partner Interface & Data */}
+          <Route
+            path="/supplier"
+            element={
+              <ProtectedRoute allowedRoles={['supplier', 'admin']}>
+                <SupplierPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Control Center Interface & System Modules */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/operations"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <OperationsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/agents"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AgentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/routes"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <RoutesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sap"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <SapPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/documents"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <DocumentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/audit"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AuditPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/architecture"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ArchitecturePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/scm-guidance"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <ScmGuidancePage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Catch-all Wildcard Route -> Redirect to Entrance */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -53,6 +189,17 @@ function MainLayout() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === '/';
+  const showChrome = isAuthenticated && !isLoginPage;
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-primary)] font-sans flex flex-col justify-between transition-colors">
@@ -60,25 +207,29 @@ function MainLayout() {
       {/* PWA Custom Home-Screen Install Prompt */}
       <InstallPwaPrompt />
 
-      {/* Global Navigation Header */}
-      <Navbar onOpenMore={() => setIsMoreOpen(true)} />
+      {/* Global Navigation Header — only shown after login */}
+      {showChrome && <Navbar onOpenMore={() => setIsMoreOpen(true)} onLogout={handleLogout} />}
 
       {/* Page Content */}
       <AnimatedRoutes />
 
-      {/* Mobile App Bottom Navigation Bar */}
-      <BottomNav
-        onOpenMore={() => setIsMoreOpen(true)}
-        isMoreOpen={isMoreOpen}
-      />
+      {/* Mobile App Bottom Navigation Bar — only shown after login */}
+      {showChrome && (
+        <BottomNav
+          onOpenMore={() => setIsMoreOpen(true)}
+          isMoreOpen={isMoreOpen}
+        />
+      )}
 
-      {/* Mobile App More Bottom Sheet Drawer */}
-      <MoreBottomSheet
-        isOpen={isMoreOpen}
-        onClose={() => setIsMoreOpen(false)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onOpenAbout={() => setIsAboutOpen(true)}
-      />
+      {/* Mobile App More Bottom Sheet Drawer — only shown after login */}
+      {showChrome && (
+        <MoreBottomSheet
+          isOpen={isMoreOpen}
+          onClose={() => setIsMoreOpen(false)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenAbout={() => setIsAboutOpen(true)}
+        />
+      )}
 
       {/* Settings Modal */}
       {isSettingsOpen && (
@@ -168,8 +319,8 @@ function MainLayout() {
         </div>
       )}
 
-      {/* Footer */}
-      <Footer />
+      {/* Footer — only shown after login */}
+      {showChrome && <Footer />}
 
     </div>
   );
@@ -178,9 +329,13 @@ function MainLayout() {
 export function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <MainLayout />
-      </BrowserRouter>
+      <AuthProvider>
+        <RoleProvider>
+          <BrowserRouter>
+            <MainLayout />
+          </BrowserRouter>
+        </RoleProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

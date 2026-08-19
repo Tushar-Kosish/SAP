@@ -1,10 +1,14 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import {
   Home,
   Activity,
   Cpu,
   MapPin,
+  Truck,
+  UserCheck,
+  ShieldAlert,
   Menu
 } from 'lucide-react';
 
@@ -15,13 +19,30 @@ interface BottomNavProps {
 
 export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore, isMoreOpen }) => {
   const location = useLocation();
+  const { user } = useAuth();
 
-  const primaryTabs = [
-    { path: '/', label: 'Home', icon: <Home className="w-5 h-5" /> },
-    { path: '/operations', label: 'Operations', icon: <Activity className="w-5 h-5" /> },
-    { path: '/agents', label: 'Agents', icon: <Cpu className="w-5 h-5" /> },
-    { path: '/routes', label: 'Routes', icon: <MapPin className="w-5 h-5" /> },
-  ];
+  // Role-aware bottom tabs
+  const getTabsByRole = () => {
+    if (user?.role === 'supplier') {
+      return [
+        { path: '/supplier', label: 'Dashboard', icon: <Truck className="w-5 h-5" /> },
+      ];
+    }
+    if (user?.role === 'customer') {
+      return [
+        { path: '/client', label: 'Tracking', icon: <UserCheck className="w-5 h-5" /> },
+      ];
+    }
+    // Admin tabs
+    return [
+      { path: '/admin', label: 'Admin', icon: <ShieldAlert className="w-5 h-5" /> },
+      { path: '/operations', label: 'Operations', icon: <Activity className="w-5 h-5" /> },
+      { path: '/agents', label: 'Agents', icon: <Cpu className="w-5 h-5" /> },
+      { path: '/routes', label: 'Routes', icon: <MapPin className="w-5 h-5" /> },
+    ];
+  };
+
+  const primaryTabs = getTabsByRole();
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#080B11]/95 backdrop-blur-lg border-t border-white/10 px-2 py-1.5 pb-safe shadow-2xl">

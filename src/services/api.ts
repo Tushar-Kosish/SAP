@@ -20,10 +20,10 @@ import {
   initialDocuments
 } from './mockData';
 
-// Simulated API latency helper
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:8000';
 
 class SmartEvacApiService {
+  private token: string | null = localStorage.getItem('smartevac_token');
   private metrics: CorridorMetrics = { ...initialCorridorMetrics };
   private disruption: DisruptionEvent = { ...initialDisruptionEvent };
   private agents: AgentStatus[] = [...initialAgents];
@@ -33,118 +33,260 @@ class SmartEvacApiService {
   private auditLogs: AuditLogEntry[] = [...initialAuditLogs];
   private documents: LogisticsDocument[] = [...initialDocuments];
 
-  // Fetch Corridor Metrics
+  public setAuthToken(token: string | null) {
+    self_token_set: {
+      this.token = token;
+    }
+  }
+
+  private getHeaders(): HeadersInit {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+    return headers;
+  }
+
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...this.getHeaders(),
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json().catch(() => ({ detail: response.statusText }));
+      throw new Error(errorBody.detail || `HTTP Error ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  // ==========================================
+  // Real FastAPI Backend Authentication Endpoints
+  // ==========================================
+
+  async register(data: { name: string; email: string; password: string; role: string }) {
+    return this.request<{ access_token: string; token_type: string; user_id: number; name: string; email: string; role: string }>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async login(data: { email: string; password: string }) {
+    return this.request<{ access_token: string; token_type: string; user_id: number; name: string; email: string; role: string }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async logout() {
+    return this.request<{ message: string }>('/auth/logout', { method: 'POST' });
+  }
+
+  async getMe() {
+    return this.request<{ id: number; name: string; email: string; role: string }>('/auth/me');
+  }
+
+  // ==========================================
+  // Real Orders API
+  // ==========================================
+
+  async getOrders() {
+    return this.request<Array<{
+      id: string;
+      customer_id: number;
+      customer_name?: string;
+      supplier_id?: number;
+      supplier_name?: string;
+      product: string;
+      quantity: number;
+      status: string;
+      created_at: string;
+    }>>('/orders');
+  }
+
+  async createOrder(data: { product: string; quantity: number; supplier_id?: number; destination?: string }) {
+    return this.request('/orders', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ==========================================
+  // Real Shipments API
+  // ==========================================
+
+  async getShipments() {
+    return this.request<Array<{
+      id: string;
+      order_id: string;
+      current_location: string;
+      destination: string;
+      current_route: string;
+      estimated_delivery: string;
+      status: string;
+      customer_name?: string;
+      supplier_name?: string;
+      product?: string;
+      quantity?: number;
+    }>>('/shipments');
+  }
+
+  async getShipmentById(id: string) {
+    return this.request<{
+      id: string;
+      order_id: string;
+      current_location: string;
+      destination: string;
+      current_route: string;
+      estimated_delivery: string;
+      status: string;
+      customer_name?: string;
+      supplier_name?: string;
+      product?: string;
+      quantity?: number;
+    }>(`/shipments/${id}`);
+  }
+
+  async updateShipmentStatus(id: string, data: { status: string; current_location?: string }) {
+    return this.request(`/shipments/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ==========================================
+  // Real Reroute Requests API
+  // ==========================================
+
+  async getRerouteRequests() {
+    return this.request<Array<{
+      id: string;
+      shipment_id: string;
+      reason: string;
+      proposed_route: string;
+      status: string;
+      created_by: string;
+      approved_by?: number;
+      created_at: string;
+      shipment_current_route?: string;
+    }>>('/reroute-requests');
+  }
+
+  async getMultiModalComparison(distanceKm: number = 1200) {
+    return this.request<Record<string, {
+      name: string;
+      mode: string;
+      transit_time_hours: number;
+      cost_per_teu_inr: number;
+      co2_tons_per_teu: number;
+      risk_level: string;
+      ai_score: number;
+      recommended?: boolean;
+    }>>(`/multimodal-comparison?distance_km=${distanceKm}`);
+  }
+
+  async triggerReroute(data: { shipment_id: string; reason: string; proposed_route?: string; custom_prompt?: string }) {
+    return this.request('/reroute-requests', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async approveReroute(requestId: string) {
+    return this.request<{ id: string; shipment_id: string; status: string; proposed_route: string }>(
+      `/reroute-requests/${requestId}/approve`,
+      { method: 'POST' }
+    );
+  }
+
+  async rejectReroute(requestId: string) {
+    return this.request<{ id: string; shipment_id: string; status: string }>(
+      `/reroute-requests/${requestId}/reject`,
+      { method: 'POST' }
+    );
+  }
+
+  // ==========================================
+  // Real Notifications API
+  // ==========================================
+
+  async getNotifications() {
+    return this.request<Array<{
+      id: string;
+      user_id: number;
+      message: string;
+      type: string;
+      is_read: boolean;
+      created_at: string;
+    }>>('/notifications');
+  }
+
+  async markNotificationRead(id: string) {
+    return this.request(`/notifications/${id}/read`, { method: 'POST' });
+  }
+
+  // ==========================================
+  // WebSockets Connection
+  // ==========================================
+
+  connectWebSocket(userId: number, onMessage: (data: any) => void): WebSocket {
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsHost = API_BASE_URL.replace(/^https?:\/\//, '');
+    const ws = new WebSocket(`${wsProtocol}//${wsHost}/ws/${userId}`);
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        onMessage(data);
+      } catch (e) {
+        console.log("WebSocket message:", event.data);
+      }
+    };
+
+    return ws;
+  }
+
+  // ==========================================
+  // Demo Helper Telemetry & Documents Methods
+  // ==========================================
+
   async getMetrics(): Promise<CorridorMetrics> {
-    await delay(100);
     return { ...this.metrics };
   }
 
-  // Fetch Disruption Alert
   async getDisruption(): Promise<DisruptionEvent> {
-    await delay(100);
     return { ...this.disruption };
   }
 
-  // Fetch AI Agent Network Status
   async getAgents(): Promise<AgentStatus[]> {
-    await delay(150);
     return [...this.agents];
   }
 
-  // Fetch Alternative Route Options
   async getRoutes(): Promise<RouteOption[]> {
-    await delay(150);
     return [...this.routes];
   }
 
-  // Fetch AI Recommendation
   async getRecommendation(): Promise<AIRecommendation> {
-    await delay(100);
     return { ...this.recommendation };
   }
 
-  // Fetch SAP BTP Telemetry Logs
   async getSapLogs(): Promise<SapApiLog[]> {
-    await delay(100);
     return [...this.sapLogs];
   }
 
-  // Fetch Decision Audit Logs
   async getAuditLogs(): Promise<AuditLogEntry[]> {
-    await delay(100);
     return [...this.auditLogs];
   }
 
-  // Fetch Generated Logistics Documents
   async getDocuments(): Promise<LogisticsDocument[]> {
-    await delay(100);
     return [...this.documents];
-  }
-
-  // Add SAP Log Entry
-  addSapLog(log: Omit<SapApiLog, 'id'>): SapApiLog {
-    const newLog: SapApiLog = {
-      ...log,
-      id: `SAP-LOG-${Math.floor(1000 + Math.random() * 9000)}`
-    };
-    this.sapLogs = [newLog, ...this.sapLogs];
-    return newLog;
-  }
-
-  // Add Audit Log Entry
-  addAuditLog(log: Omit<AuditLogEntry, 'id'>): AuditLogEntry {
-    const newLog: AuditLogEntry = {
-      ...log,
-      id: `AUDIT-${Math.floor(100 + Math.random() * 900)}`
-    };
-    this.auditLogs = [newLog, ...this.auditLogs];
-    return newLog;
-  }
-
-  // Approve Reroute Decision
-  async approveReroute(): Promise<{ success: boolean; message: string; sapOrderRef: string }> {
-    await delay(400);
-
-    const now = new Date();
-    const timeStr = now.toTimeString().split(' ')[0];
-
-    // Create SAP Dispatch Log
-    this.addSapLog({
-      timestamp: timeStr,
-      method: 'POST',
-      endpoint: '/sap/opu/odata/sap/TRANSPORTATION_ORDER_SRV/BookingSet',
-      status: 201,
-      statusText: 'Created',
-      payloadSnippet: '{"ShipmentID":"870192","NewRoute":"WDFC_RAIL","Containers":120,"Status":"EXECUTED"}',
-      responseSnippet: '{"d":{"TransportationOrderID":"TO-948271","Status":"CONFIRMED","ETA":"31 Hours"}}',
-      system: 'SAP TM'
-    });
-
-    // Add Audit Log
-    this.addAuditLog({
-      timestamp: timeStr,
-      agentId: 'documentation',
-      agentName: 'Documentation Agent',
-      action: 'Human Authorization Received & Executed',
-      severity: 'SUCCESS',
-      details: '120 TEU containers successfully rerouted to WDFC Rail. SAP TM order TO-948271 issued.',
-      transactionRef: 'SAP-TM-TO-948271'
-    });
-
-    // Update metrics to reflect resolved delay
-    this.metrics = {
-      ...this.metrics,
-      currentDisruptions: 2,
-      averageDelayHours: 2.1,
-      costExposureLakhs: 13.0,
-      co2ExposureTons: 6.4,
-    };
-
-    return {
-      success: true,
-      message: '120 containers reassigned to WDFC Rail. SAP TM execution request initiated.',
-      sapOrderRef: 'SAP-TM-TO-948271'
-    };
   }
 }
 
