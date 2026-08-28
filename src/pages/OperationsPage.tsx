@@ -20,7 +20,7 @@ export const OperationsPage: React.FC = () => {
   const [agents, setAgents] = useState<AgentStatus[]>([]);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
   const [recommendation, setRecommendation] = useState<AIRecommendation | null>(null);
-  const [selectedRouteId, setSelectedRouteId] = useState<'road' | 'rail' | 'coastal'>('rail');
+  const [selectedRouteId, setSelectedRouteId] = useState<'road' | 'rail' | 'coastal' | 'ship' | 'air'>('rail');
 
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationStep, setSimulationStep] = useState(0);

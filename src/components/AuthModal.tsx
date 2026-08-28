@@ -9,7 +9,7 @@ export const AuthModal: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('customer');
+  const [role, setRole] = useState<UserRole>('supplier');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -48,27 +48,12 @@ export const AuthModal: React.FC = () => {
   };
 
   const handleDemoLogin = async (demoRole: UserRole) => {
-    setErrorMsg(null);
+    const demoEmail = demoRole === 'admin' ? 'admin@smartevac.ai' : 'supplier@abclogistics.com';
+    const demoPass = demoRole === 'admin' ? 'admin123' : 'supplier123';
     setIsSubmitting(true);
-    let demoEmail = '';
-    let demoPass = '';
-
-    if (demoRole === 'admin') {
-      demoEmail = 'admin@smartevac.ai';
-      demoPass = 'admin123';
-    } else if (demoRole === 'supplier') {
-      demoEmail = 'supplier@concor.co.in';
-      demoPass = 'supplier123';
-    } else {
-      demoEmail = 'customer@tatamotors.com';
-      demoPass = 'customer123';
-    }
-
-    const res = await login(demoEmail, demoPass);
+    await login(demoEmail, demoPass);
     setIsSubmitting(false);
-    if (!res.success) {
-      setErrorMsg(`Demo ${demoRole} login failed.`);
-    }
+    setIsAuthModalOpen(false);
   };
 
   return (
@@ -127,12 +112,12 @@ export const AuthModal: React.FC = () => {
           </div>
           <div className="grid grid-cols-3 gap-2 text-xs">
             <button
-              onClick={() => handleDemoLogin('customer')}
+              onClick={() => handleDemoLogin('supplier')}
               disabled={isSubmitting}
-              className="px-2 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 font-bold flex flex-col items-center gap-0.5 transition-all active:scale-95"
+              className="px-2 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold flex flex-col items-center gap-0.5 transition-all active:scale-95"
             >
-              <UserCheck className="w-3.5 h-3.5" />
-              <span>Customer</span>
+              <Truck className="w-3.5 h-3.5" />
+              <span>Supplier</span>
             </button>
             <button
               onClick={() => handleDemoLogin('supplier')}
@@ -219,18 +204,7 @@ export const AuthModal: React.FC = () => {
           {activeTab === 'register' && (
             <div className="space-y-1">
               <label className="text-xs font-bold text-[var(--text-secondary)]">Select Account Role</label>
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setRole('customer')}
-                  className={`p-2 rounded-xl border font-bold flex items-center justify-center gap-1 ${
-                    role === 'customer'
-                      ? 'bg-indigo-600 text-white border-indigo-500'
-                      : 'bg-[var(--bg-surface-inset)] text-[var(--text-secondary)] border-[var(--border-color)]'
-                  }`}
-                >
-                  <UserCheck className="w-3.5 h-3.5" /> Customer
-                </button>
+              <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => setRole('supplier')}

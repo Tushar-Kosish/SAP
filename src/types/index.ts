@@ -39,17 +39,41 @@ export interface DisruptionEvent {
   location: [number, number]; // lat, lng
 }
 
+export interface WeatherCondition {
+  location: string;
+  weatherType: 'Storm' | 'Heavy Rain' | 'Clear' | 'Fog' | 'High Wind' | 'Cyclone Alert';
+  temperature: string;
+  windSpeed: string;
+  precipitation: string;
+  severity: 'CRITICAL' | 'WARNING' | 'NORMAL';
+  impactDescription: string;
+}
+
+export interface MultimodalOption {
+  id: 'ship' | 'air' | 'rail' | 'road';
+  name: string;
+  mode: 'By Ship' | 'By Air' | 'By Rail' | 'By Road';
+  transitTimeHours: number;
+  costPerTeu: number;
+  co2TonsPerTeu: number;
+  riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
+  weatherStatus: WeatherCondition;
+  icon: string;
+  color: string;
+  pathwayName: string;
+}
+
 export interface RouteOption {
-  id: 'road' | 'rail' | 'coastal';
+  id: 'road' | 'rail' | 'coastal' | 'ship' | 'air';
   name: string;
   mode: string;
   pathway: string;
   etaHours: number;
   costPerContainer: number;
-  totalCost: number; // For batch of 120 containers
+  totalCost: number; // For batch of containers
   co2PerContainerTons: number;
   totalCo2Tons: number;
-  riskLevel: 'High' | 'Low' | 'Medium';
+  riskLevel: 'High' | 'Low' | 'Medium' | 'Critical';
   aiScore: number;
   isRecommended: boolean;
   color: string;
@@ -60,7 +84,7 @@ export interface RouteOption {
 }
 
 export interface AIRecommendation {
-  targetRouteId: 'rail';
+  targetRouteId: 'rail' | 'ship' | 'air' | 'road';
   routeName: string;
   score: number;
   containersToReassign: number;
@@ -100,13 +124,14 @@ export interface AuditLogEntry {
 export interface LogisticsDocument {
   id: string;
   title: string;
-  category: 'Rail Booking' | 'Customs Filing' | 'Transportation Order' | 'AI Report' | 'Risk Evaluation';
+  category: 'Rail Booking' | 'Customs Filing' | 'Transportation Order' | 'AI Report' | 'Risk Evaluation' | 'Reroute Authorization';
   format: 'PDF';
   dateGenerated: string;
   fileSize: string;
   referenceNo: string;
   summary: string;
   downloadUrl?: string;
+  pdfDataUri?: string;
 }
 
 export interface SimulationStep {
@@ -115,3 +140,4 @@ export interface SimulationStep {
   description: string;
   durationMs: number;
 }
+

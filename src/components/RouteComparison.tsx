@@ -13,7 +13,7 @@ interface RouteComparisonProps {
   routes: RouteOption[];
   recommendation: AIRecommendation;
   selectedRouteId: string;
-  onSelectRoute: (id: 'road' | 'rail' | 'coastal') => void;
+  onSelectRoute: (id: 'road' | 'rail' | 'coastal' | 'ship' | 'air') => void;
   onApprove: () => void;
   onOpenReasoning: () => void;
 }

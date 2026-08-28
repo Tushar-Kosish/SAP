@@ -1,0 +1,16 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database & local state files
+*.db
+smartevac_local.db
+firebase_key.json
+.env
+
+# Environment / IDE files
+.venv/
+env/
+.vscode/
+.idea/

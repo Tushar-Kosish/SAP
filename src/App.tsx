@@ -19,7 +19,6 @@ import { DocumentsPage } from './pages/DocumentsPage';
 import { AuditPage } from './pages/AuditPage';
 import { ArchitecturePage } from './pages/ArchitecturePage';
 
-import { ClientPage } from './pages/ClientPage';
 import { SupplierPage } from './pages/SupplierPage';
 import { AdminPage } from './pages/AdminPage';
 import { ScmGuidancePage } from './pages/ScmGuidancePage';
@@ -50,8 +49,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: UserR
   // Role Access Isolation Guard
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     if (user.role === 'admin') return <Navigate to="/admin" replace />;
-    if (user.role === 'supplier') return <Navigate to="/supplier" replace />;
-    return <Navigate to="/client" replace />;
+    return <Navigate to="/supplier" replace />;
   }
 
   return <>{children}</>;
@@ -73,16 +71,6 @@ function AnimatedRoutes() {
         <Routes location={location}>
           {/* Public Login & Sign Up Entrance Page */}
           <Route path="/" element={<LoginPage />} />
-
-          {/* Consumer / Customer Interface & Data */}
-          <Route
-            path="/client"
-            element={
-              <ProtectedRoute allowedRoles={['customer', 'admin']}>
-                <ClientPage />
-              </ProtectedRoute>
-            }
-          />
 
           {/* Supplier Partner Interface & Data */}
           <Route

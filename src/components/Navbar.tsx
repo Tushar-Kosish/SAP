@@ -25,18 +25,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
   const getNavLinks = () => {
     if (!user) return [];
     if (user.role === 'admin') return [
-      { path: '/admin', label: 'Control Center', icon: <ShieldAlert className="w-4 h-4 text-purple-400" /> },
-      { path: '/operations', label: 'Operations', icon: <Activity className="w-4 h-4 text-emerald-400" /> },
-      { path: '/agents', label: 'AI Agents', icon: <Cpu className="w-4 h-4 text-blue-400" /> },
-      { path: '/routes', label: 'Routes', icon: <MapPin className="w-4 h-4 text-amber-400" /> },
-      { path: '/scm-guidance', label: 'SCM Suite', icon: <BookOpen className="w-4 h-4 text-cyan-400" /> },
+      { path: '/admin', label: 'Dashboard', icon: <ShieldAlert className="w-4 h-4 text-purple-400" /> },
+      { path: '/operations', label: 'Live Operations', icon: <Activity className="w-4 h-4 text-emerald-400" /> },
+      { path: '/agents', label: 'AI Decisions', icon: <Cpu className="w-4 h-4 text-blue-400" /> },
+      { path: '/routes', label: 'Route Management', icon: <MapPin className="w-4 h-4 text-amber-400" /> },
+      { path: '/scm-guidance', label: 'System', icon: <BookOpen className="w-4 h-4 text-cyan-400" /> },
     ];
-    if (user.role === 'supplier') return [
-      { path: '/supplier', label: 'Supplier Portal', icon: <Truck className="w-4 h-4 text-emerald-400" /> },
-    ];
-    // customer
     return [
-      { path: '/client', label: 'My Shipments', icon: <UserCheck className="w-4 h-4 text-indigo-400" /> },
+      { path: '/supplier', label: 'Dashboard', icon: <Truck className="w-4 h-4 text-emerald-400" /> },
     ];
   };
 

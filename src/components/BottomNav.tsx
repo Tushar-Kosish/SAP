@@ -25,12 +25,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenMore, isMoreOpen }) 
   const getTabsByRole = () => {
     if (user?.role === 'supplier') {
       return [
-        { path: '/supplier', label: 'Dashboard', icon: <Truck className="w-5 h-5" /> },
-      ];
-    }
-    if (user?.role === 'customer') {
-      return [
-        { path: '/client', label: 'Tracking', icon: <UserCheck className="w-5 h-5" /> },
+        { path: '/supplier', label: 'Supplier', icon: <Truck className="w-5 h-5" /> },
       ];
     }
     // Admin tabs

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useAuth } from './AuthContext';
 import { apiService } from '../services/api';
 import { realtimeSync, SyncEvent } from '../services/realtimeSync';
+import { generateReroutePDF } from '../services/pdfGenerator';
 
 export type UserRole = 'client' | 'supplier' | 'admin' | 'customer';
 
@@ -43,9 +44,14 @@ export interface RerouteOrder {
   toMode: string;
   supplierName: string;
   requestedAt: string;
-  status: 'PENDING_ACK' | 'ACCEPTED' | 'IN_TRANSIT' | 'COMPLETED' | 'PENDING' | 'APPROVED' | 'REJECTED';
+  status: 'PENDING_ACK' | 'ACCEPTED' | 'IN_TRANSIT' | 'COMPLETED' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'REVERTED' | 'PENDING_ADMIN_APPROVAL';
   ratePerContainer: number;
   reason?: string;
+  weatherReason?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  documentDataUri?: string;
+  documentFilename?: string;
 }
 
 export interface RoleContextType {
@@ -59,6 +65,16 @@ export interface RoleContextType {
   setTransparencyEnabled: (enabled: boolean) => void;
   toggleRerouteApproval: (shipmentId: string) => Promise<void>;
   approveRerouteRequest: (requestId: string) => Promise<void>;
+  approveRerouteWithDocument: (requestId: string, adminNotes?: string) => Promise<void>;
+  revokeRerouteOrder: (requestId: string) => Promise<void>;
+  submitRerouteRequest: (req: {
+    shipmentId: string;
+    fromMode: string;
+    toMode: string;
+    containers: number;
+    weatherReason: string;
+    ratePerContainer?: number;
+  }) => Promise<void>;
   rejectRerouteRequest: (requestId: string) => Promise<void>;
   updateFleetStatus: (fleetId: string, status: SupplierFleet['status'], utilized: number) => void;
   acceptRerouteOrder: (orderId: string) => void;
@@ -152,6 +168,22 @@ const initialFleets: SupplierFleet[] = [
   },
 ];
 
+const initialOrders: RerouteOrder[] = [
+  {
+    id: 'REQ-8801',
+    shipmentId: 'SHP-102',
+    containers: 45,
+    fromMode: 'Highway Route A (NH48 Heavy Rain & Flooding)',
+    toMode: 'DFCCIL High-Speed Rail Corridor',
+    supplierName: 'CONCOR Logistics India',
+    requestedAt: '14:20 PM',
+    status: 'PENDING_ADMIN_APPROVAL',
+    ratePerContainer: 14200,
+    reason: 'Heavy Downpour causing 14h congestion on Highway NH48.',
+    weatherReason: 'Torrential rains causing flash floods on Gujarat-Maharashtra border.'
+  }
+];
+
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -159,7 +191,7 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [role, setRoleState] = useState<UserRole>('admin');
   const [clientShipments, setClientShipments] = useState<ClientShipment[]>(initialShipments);
   const [supplierFleets, setSupplierFleets] = useState<SupplierFleet[]>(initialFleets);
-  const [rerouteOrders, setRerouteOrders] = useState<RerouteOrder[]>([]);
+  const [rerouteOrders, setRerouteOrders] = useState<RerouteOrder[]>(initialOrders);
   const [backendRerouteRequests, setBackendRerouteRequests] = useState<any[]>([]);
   const [transparencyEnabled, setTransparencyEnabled] = useState<boolean>(true);
   const [auditTrailCount, setAuditTrailCount] = useState<number>(142);
@@ -168,8 +200,7 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Sync role with logged-in user
   useEffect(() => {
     if (user) {
-      const mappedRole = user.role === 'customer' ? 'client' : (user.role as UserRole);
-      setRoleState(mappedRole);
+      setRoleState(user.role);
     }
   }, [user]);
 
@@ -210,7 +241,7 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshData = async () => {
     try {
       if (isAuthenticated) {
-        // Fetch shipments from real backend
+        // Fetch shipments from real backend if online
         const shipmentsData = await apiService.getShipments();
         if (shipmentsData && shipmentsData.length > 0) {
           const mapped: ClientShipment[] = shipmentsData.map((s) => ({
@@ -233,24 +264,24 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setClientShipments(mapped);
         }
 
-        // Fetch reroute requests from backend
         try {
           const rerouteData = await apiService.getRerouteRequests();
-          setBackendRerouteRequests(rerouteData);
-
-          const mappedOrders: RerouteOrder[] = rerouteData.map((r) => ({
-            id: r.id,
-            shipmentId: r.shipment_id,
-            containers: 45,
-            fromMode: r.shipment_current_route || 'Highway NH48',
-            toMode: r.proposed_route,
-            supplierName: 'CONCOR Logistics India',
-            requestedAt: new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            status: r.status === 'APPROVED' ? 'ACCEPTED' : (r.status as any),
-            ratePerContainer: 12500,
-            reason: r.reason
-          }));
-          setRerouteOrders(mappedOrders);
+          if (rerouteData && rerouteData.length > 0) {
+            setBackendRerouteRequests(rerouteData);
+            const mappedOrders: RerouteOrder[] = rerouteData.map((r) => ({
+              id: r.id,
+              shipmentId: r.shipment_id,
+              containers: 45,
+              fromMode: r.shipment_current_route || 'Highway NH48',
+              toMode: r.proposed_route,
+              supplierName: 'CONCOR Logistics India',
+              requestedAt: new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              status: r.status === 'APPROVED' ? 'ACCEPTED' : (r.status as any),
+              ratePerContainer: 14200,
+              reason: r.reason
+            }));
+            setRerouteOrders(mappedOrders);
+          }
         } catch (e) {}
       }
     } catch (err) {
@@ -266,34 +297,140 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setRoleState(newRole);
   };
 
-  const approveRerouteRequest = async (requestId: string) => {
+  const submitRerouteRequest = async (req: {
+    shipmentId: string;
+    fromMode: string;
+    toMode: string;
+    containers: number;
+    weatherReason: string;
+    ratePerContainer?: number;
+  }) => {
+    const newId = `REQ-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newOrder: RerouteOrder = {
+      id: newId,
+      shipmentId: req.shipmentId,
+      containers: req.containers,
+      fromMode: req.fromMode,
+      toMode: req.toMode,
+      supplierName: user?.name || 'CONCOR Logistics India',
+      requestedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: 'PENDING_ADMIN_APPROVAL',
+      ratePerContainer: req.ratePerContainer || 14200,
+      reason: req.weatherReason,
+      weatherReason: req.weatherReason
+    };
+
+    setRerouteOrders((prev) => [newOrder, ...prev]);
+    setAuditTrailCount((c) => c + 1);
+
+    try {
+      await apiService.triggerReroute({
+        shipment_id: req.shipmentId,
+        reason: req.weatherReason,
+        proposed_route: req.toMode
+      });
+    } catch (e) {}
+
+    realtimeSync.broadcast('REROUTE_TRIGGERED', 'supplier', { requestId: newId });
+  };
+
+  const approveRerouteWithDocument = async (requestId: string, adminNotes?: string) => {
+    const nowStr = new Date().toLocaleString();
+    const adminName = user?.name || 'System Administrator (SAP Officer)';
+
+    let updatedDocDataUri = '';
+    let updatedFilename = '';
+
+    setRerouteOrders((prev) =>
+      prev.map((o) => {
+        if (o.id === requestId) {
+          const docRes = generateReroutePDF({
+            requestId: o.id,
+            shipmentId: o.shipmentId,
+            supplierName: o.supplierName,
+            fromMode: o.fromMode,
+            toMode: o.toMode,
+            containers: o.containers,
+            weatherReason: o.reason || o.weatherReason || 'Weather Emergency Bypass Approved',
+            approvedBy: adminName,
+            approvedAt: nowStr,
+            costSavings: '₹ 4.8 Lakhs Net Savings',
+            timeSavings: '12 Hours Delay Avoided'
+          });
+
+          updatedDocDataUri = docRes.dataUri;
+          updatedFilename = docRes.filename;
+
+          return {
+            ...o,
+            status: 'ACCEPTED',
+            approvedBy: adminName,
+            approvedAt: nowStr,
+            documentDataUri: docRes.dataUri,
+            documentFilename: docRes.filename
+          };
+        }
+        return o;
+      })
+    );
+
+    // Update shipment status to Rerouted
+    setClientShipments((prev) =>
+      prev.map((s) => ({
+        ...s,
+        status: 'Rerouted',
+        rerouteApproved: true,
+        costSavingsLakhs: 4.8,
+        co2SavingsTons: 14.2,
+      }))
+    );
+
     try {
       await apiService.approveReroute(requestId);
-      await refreshData();
-    } catch (err) {
-      setRerouteOrders((prev) =>
-        prev.map((o) => (o.id === requestId ? { ...o, status: 'ACCEPTED' } : o))
-      );
-    }
+    } catch (err) {}
+
     setAuditTrailCount((c) => c + 1);
-    realtimeSync.broadcast('REROUTE_APPROVED', (user?.role as any) || 'admin', { requestId });
+    realtimeSync.broadcast('REROUTE_APPROVED', 'admin', { requestId, adminName });
+  };
+
+  const approveRerouteRequest = async (requestId: string) => {
+    await approveRerouteWithDocument(requestId);
+  };
+
+  const revokeRerouteOrder = async (requestId: string) => {
+    setRerouteOrders((prev) =>
+      prev.map((o) => (o.id === requestId ? { ...o, status: 'REVERTED' } : o))
+    );
+
+    setClientShipments((prev) =>
+      prev.map((s) => ({
+        ...s,
+        status: 'Delayed',
+        rerouteApproved: false,
+        costSavingsLakhs: 0,
+        co2SavingsTons: 0,
+      }))
+    );
+
+    setAuditTrailCount((c) => c + 1);
+    realtimeSync.broadcast('SHIPMENT_STATUS_UPDATED', 'admin', { requestId, action: 'REVOKE_REROUTE' });
   };
 
   const rejectRerouteRequest = async (requestId: string) => {
+    setRerouteOrders((prev) =>
+      prev.map((o) => (o.id === requestId ? { ...o, status: 'REJECTED' } : o))
+    );
     try {
       await apiService.rejectReroute(requestId);
-      await refreshData();
-    } catch (err) {
-      console.error("Reject reroute failed:", err);
-    }
+    } catch (err) {}
     setAuditTrailCount((c) => c + 1);
-    realtimeSync.broadcast('REROUTE_REJECTED', (user?.role as any) || 'admin', { requestId });
+    realtimeSync.broadcast('REROUTE_REJECTED', 'admin', { requestId });
   };
 
   const toggleRerouteApproval = async (shipmentId: string) => {
-    const matchingReq = backendRerouteRequests.find((r) => r.shipment_id === shipmentId && r.status === 'PENDING');
+    const matchingReq = rerouteOrders.find((r) => r.shipmentId === shipmentId);
     if (matchingReq) {
-      await approveRerouteRequest(matchingReq.id);
+      await approveRerouteWithDocument(matchingReq.id);
     } else {
       setClientShipments((prev) =>
         prev.map((s) => {
@@ -312,7 +449,7 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
     }
     setAuditTrailCount((c) => c + 1);
-    realtimeSync.broadcast('REROUTE_TRIGGERED', (user?.role as any) || 'customer', { shipmentId });
+    realtimeSync.broadcast('REROUTE_TRIGGERED', 'admin', { shipmentId });
   };
 
   const updateFleetStatus = (fleetId: string, status: SupplierFleet['status'], utilized: number) => {
@@ -324,7 +461,7 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const acceptRerouteOrder = (orderId: string) => {
-    approveRerouteRequest(orderId);
+    approveRerouteWithDocument(orderId);
   };
 
   const triggerEmergencyOverride = async (corridor: string) => {
@@ -364,6 +501,9 @@ export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setTransparencyEnabled,
         toggleRerouteApproval,
         approveRerouteRequest,
+        approveRerouteWithDocument,
+        revokeRerouteOrder,
+        submitRerouteRequest,
         rejectRerouteRequest,
         updateFleetStatus,
         acceptRerouteOrder,
@@ -385,3 +525,4 @@ export const useRole = () => {
   }
   return context;
 };
+

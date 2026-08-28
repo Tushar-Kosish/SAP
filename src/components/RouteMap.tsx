@@ -6,7 +6,7 @@ import { Layers, MapPin, Navigation, Maximize2, X, CheckCircle2 } from 'lucide-r
 interface RouteMapProps {
   routes: RouteOption[];
   selectedRouteId: string;
-  onSelectRoute: (id: 'road' | 'rail' | 'coastal') => void;
+  onSelectRoute: (id: 'road' | 'rail' | 'coastal' | 'ship' | 'air') => void;
 }
 
 export const RouteMap: React.FC<RouteMapProps> = ({

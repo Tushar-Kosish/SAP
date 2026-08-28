@@ -10,7 +10,7 @@ export const RoutesPage: React.FC = () => {
   const navigate = useNavigate();
   const [routes, setRoutes] = useState<RouteOption[]>([]);
   const [recommendation, setRecommendation] = useState<AIRecommendation | null>(null);
-  const [selectedRouteId, setSelectedRouteId] = useState<'road' | 'rail' | 'coastal'>('rail');
+  const [selectedRouteId, setSelectedRouteId] = useState<'road' | 'rail' | 'coastal' | 'ship' | 'air'>('rail');
 
   useEffect(() => {
     Promise.all([apiService.getRoutes(), apiService.getRecommendation()]).then(([r, rec]) => {

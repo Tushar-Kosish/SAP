@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiService } from '../services/api';
 
-export type UserRole = 'admin' | 'supplier' | 'customer';
+export type UserRole = 'admin' | 'supplier';
 
 export interface AuthUser {
   id: number;
@@ -29,8 +29,8 @@ interface StoredAccount extends AuthUser {
 
 const DEFAULT_USERS: StoredAccount[] = [
   { id: 1, name: 'System Administrator', email: 'admin@smartevac.ai', passwordHash: 'admin123', role: 'admin' },
-  { id: 2, name: 'CONCOR Rail Dispatcher', email: 'supplier@concor.co.in', passwordHash: 'supplier123', role: 'supplier' },
-  { id: 3, name: 'Tata Motors Logistics', email: 'customer@tatamotors.com', passwordHash: 'customer123', role: 'customer' }
+  { id: 2, name: 'ABC Logistics Supplier', email: 'supplier@abclogistics.com', passwordHash: 'supplier123', role: 'supplier' },
+  { id: 3, name: 'CONCOR Rail Dispatcher', email: 'supplier@concor.co.in', passwordHash: 'supplier123', role: 'supplier' }
 ];
 
 const DB_STORAGE_KEY = 'smartevac_users_db';
