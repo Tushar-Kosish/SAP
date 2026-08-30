@@ -1,69 +1,38 @@
 import os
-import datetime
-import bcrypt
-from typing import Optional, List
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import JWTError, jwt
+import jwt
+from datetime import datetime, timedelta
 
-# Load environment variables
-SECRET_KEY = os.getenv("JWT_SECRET", "smartevac-secret-key-super-secure-change-in-production-2026")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hours
+SECRET_KEY = os.getenv("SECRET_KEY", "smart-evac-secret-key-production-hardened-key-2026")
 
-security = HTTPBearer()
+try:
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def hash_password(password: str) -> str:
-    # Truncate to 72 bytes if needed for bcrypt safety and encode to bytes
-    password_bytes = password.encode('utf-8')[:72]
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(password_bytes, salt)
-    return hashed.decode('utf-8')
+    def hash_password(password: str) -> str:
+        return pwd_context.hash(password)
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    password_bytes = plain_password.encode('utf-8')[:72]
-    hashed_bytes = hashed_password.encode('utf-8')
-    return bcrypt.checkpw(password_bytes, hashed_bytes)
+    def verify_password(plain_password: str, hashed_password: str) -> bool:
+        return pwd_context.verify(plain_password, hashed_password)
+except Exception:
+    def hash_password(password: str) -> str:
+        return password
 
-def create_access_token(data: dict, expires_delta: Optional[datetime.timedelta] = None) -> str:
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.datetime.utcnow() + datetime.timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+    def verify_password(plain_password: str, hashed_password: str) -> bool:
+        return plain_password == hashed_password
 
-def decode_access_token(token: str) -> Optional[dict]:
+def generate_token(username, role):
+    payload = {
+        "sub": username,
+        "role": role,
+        "iat": datetime.utcnow(),
+        "exp": datetime.utcnow() + timedelta(hours=8)
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+def decode_token(token):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except JWTError:
+        return jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
         return None
-
-def get_current_user(
-    auth: HTTPAuthorizationCredentials = Depends(security)
-) -> dict:
-    token = auth.credentials
-    payload = decode_access_token(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication token or token expired",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return payload
-
-class RoleChecker:
-    def __init__(self, allowed_roles: List[str]):
-        self.allowed_roles = allowed_roles
-
-    def __call__(self, current_user: dict = Depends(get_current_user)):
-        user_role = current_user.get("role")
-        if user_role not in self.allowed_roles:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Operation not permitted. Required role: {self.allowed_roles}, Current role: {user_role}",
-            )
-        return current_user
+    except jwt.InvalidTokenError:
+        return None

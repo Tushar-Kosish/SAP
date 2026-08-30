@@ -1,0 +1,19 @@
+version: 1.0
+runtime: python3
+build:
+  commands:
+    build:
+      - echo "Building SmartEVAC AI container for AWS App Runner..."
+      - docker build -t smartevac-app .
+run:
+  command: python app.py
+  network:
+    port: 5000
+    env: PORT
+  env:
+    - name: FLASK_ENV
+      value: production
+    - name: FLASK_DEBUG
+      value: "False"
+    - name: SECRET_KEY
+      value: "aws-production-hardened-smartevac-secret-key"

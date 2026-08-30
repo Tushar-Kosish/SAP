@@ -20,7 +20,7 @@ import {
   initialDocuments
 } from './mockData';
 
-const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:5000';
 
 class SmartEvacApiService {
   private token: string | null = localStorage.getItem('smartevac_token');
@@ -68,7 +68,7 @@ class SmartEvacApiService {
   }
 
   // ==========================================
-  // Real FastAPI Backend Authentication Endpoints
+  // Real Flask Backend Authentication Endpoints
   // ==========================================
 
   async register(data: { name: string; email: string; password: string; role: string }) {
@@ -254,15 +254,23 @@ class SmartEvacApiService {
   }
 
   // ==========================================
-  // Demo Helper Telemetry & Documents Methods
+  // Telemetry & Documents Methods with Live Backend Fetch + Fallback
   // ==========================================
 
   async getMetrics(): Promise<CorridorMetrics> {
-    return { ...this.metrics };
+    try {
+      return await this.request<CorridorMetrics>('/api/metrics');
+    } catch {
+      return { ...this.metrics };
+    }
   }
 
   async getDisruption(): Promise<DisruptionEvent> {
-    return { ...this.disruption };
+    try {
+      return await this.request<DisruptionEvent>('/api/disruption');
+    } catch {
+      return { ...this.disruption };
+    }
   }
 
   async getAgents(): Promise<AgentStatus[]> {

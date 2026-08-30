@@ -1,8 +1,12 @@
 import datetime
 import random
 from typing import Dict, Any, List
-from sqlalchemy.orm import Session
-from models import Shipment, RerouteRequest, Notification, User, Order
+try:
+    from sqlalchemy.orm import Session
+    from models import Shipment, RerouteRequest, Notification, User, Order
+except ImportError:
+    Session = None
+    Shipment = RerouteRequest = Notification = User = Order = None
 
 class AIReroutingEngine:
     """Modular AI Agent system for supply chain disruption detection and multi-modal route optimization."""

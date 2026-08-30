@@ -6,7 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Step 2: Set up Python Backend & Serve
+# Step 2: Set up Python Backend & Serve Unified Application
 FROM python:3.11-slim
 WORKDIR /app
 COPY SAP/requirements.txt ./
@@ -15,4 +15,4 @@ COPY SAP/ ./
 COPY --from=frontend-builder /app/dist ./static
 
 EXPOSE 5000
-CMD ["python", "backend_api.py"]
+CMD ["python", "app.py"]

@@ -151,33 +151,81 @@ SAP/
 
 ### 2️⃣ Backend Setup & Execution (Python Service)
 
-1. **Navigate to the backend directory**:
-   ```bash
-   cd SAP
-   ```
-
-2. **Create and activate a virtual environment**:
-   - **Windows**:
+1. **Project Preparation**:
+   - Navigate into the backend directory:
+     ```bash
+     cd SAP
+     ```
+   - Set up an isolated Python virtual environment:
      ```bash
      python -m venv venv
-     .\venv\Scripts\activate
      ```
-   - **macOS/Linux**:
+   - Activate the environment:
+     - **Windows**: `.\venv\Scripts\activate`
+     - **macOS / Linux**: `source venv/bin/activate`
+
+2. **Environment Configuration (`requirements.txt`)**:
+   - `requirements.txt` contains:
+     ```text
+     Flask==3.0.2
+     Flask-Cors==4.0.0
+     PyJWT==2.8.0
+     pydantic==2.6.1
+     requests==2.31.0
+     reportlab==4.1.0
+     ```
+   - Install dependencies:
      ```bash
-     python3 -m venv venv
-     source venv/bin/activate
+     pip install -r requirements.txt
      ```
 
-3. **Install Python dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+3. **Database Layer Setup (`database.py`)**:
+   - SQLite connection manager for local persistence (`smartevac_local.db`).
+   - Table initialization for storing container audit logs (`audit_logs`).
 
-4. **Launch the backend API server**:
-   ```bash
-   python app.py
+4. **Authentication & Authorization (`auth.py`)**:
+   - JSON Web Token (`jwt`) generation (`generate_token`) and decoding (`decode_token`) for role-based access control.
+
+5. **Autonomous AI Agent Module (`agents.py`)**:
+   - `EvacuationAgent` class evaluating environmental risk vectors and congestion levels.
+
+6. **SAP TM OData Client Integration (`sap_tm_client.py`)**:
+   - `SAPTMClient` class managing connection handles to SAP Transportation Management endpoints and mock payloads.
+
+7. **API Application Server (`app.py`)**:
+   - Main Flask server script combining routes, CORS policies, auth, agents, and SAP TM endpoints.
+
+8. **Execution and Verification**:
+   - Launch the backend application locally:
+     ```bash
+     python app.py
+     ```
+   - Confirm service is active at `http://localhost:5000`.
+
+---
+
+### 3️⃣ AWS Cloud Deployment Options
+
+#### Option A: AWS App Runner (Serverless Container - 1-Click Deployment)
+1. Push your repository to GitHub or upload container image to AWS ECR.
+2. In AWS Console ➡️ **AWS App Runner** ➡️ Create Service.
+3. Select Source Code Repository / Container Image.
+4. Set Build Command: `docker build -t smartevac-app .` and Port: `5000`.
+5. Click **Create & Deploy**. AWS provides a live, auto-scaling HTTPS URL automatically!
+
+#### Option B: AWS ECS Fargate & ECR Deployment
+1. Set AWS Credentials:
+   ```cmd
+   set AWS_ACCOUNT_ID=123456789012
+   set AWS_REGION=us-east-1
    ```
-   The Python backend will run at `http://localhost:5000` (or `http://localhost:8000`).
+2. Execute the automated AWS deployment script:
+   - **Windows**: `deploy-aws.bat`
+   - **macOS / Linux**: `./deploy-aws.sh`
+3. Launch the ECS Fargate Service:
+   ```bash
+   aws ecs create-service --cluster default --service-name smartevac-service --task-definition smartevac-ai-task --desired-count 1 --launch-type FARGATE --network-configuration "awsvpcConfiguration={subnets=[subnet-xxxxxx],securityGroups=[sg-xxxxxx],assignPublicIp=ENABLED}"
+   ```
 
 ---
 
